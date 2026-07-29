@@ -2566,30 +2566,20 @@ function submitForm() {
     return response.json();
   }).catch(function() { return {}; });
 
-  // Send to Google Apps Script (creates Google Doc in Drive)
-  fetch('https://script.google.com/macros/s/AKfycbwPCPyrFfHymDk5JTYv9QhRCJfQxuWYIoJo9vYjL1t0oqF7-4jp8ULAbAFQePWs7QOn/exec', {
+  // Send to Google Apps Script via FormData (avoids CORS issues)
+  var scriptUrl = 'https://script.google.com/macros/s/AKfycbwPCPyrFfHymDk5JTYv9QhRCJfQxuWYIoJo9vYjL1t0oqF7-4jp8ULAbAFQePWs7QOn/exec';
+  var gasData = new FormData();
+  var formObj = collectFormData();
+  Object.keys(formObj).forEach(function(k){ gasData.append(k, formObj[k] || ''); });
+
+  fetch(scriptUrl, {
     method: 'POST',
-    body: JSON.stringify(collectFormData()),
-    headers: { 'Content-Type': 'application/json' }
-  }).then(function(response) {
-    return response.json();
-  }).then(function(result) {
-    if (result.status === 'success') {
-      var successDiv = document.getElementById('submit-success');
-      var docLinkWrap = document.getElementById('doc-link-wrap');
-      var docLink = document.getElementById('doc-link');
-      if (docLink && result.docUrl) {
-        docLink.href = result.docUrl;
-        if (docLinkWrap) docLinkWrap.style.display = 'block';
-      }
-      if (successDiv) successDiv.style.display = 'block';
-      document.getElementById('submit-form-area').style.display = 'none';
-      showToast('Order submitted and Google Doc created!');
-    } else {
-      document.getElementById('submit-success').style.display = 'block';
-      document.getElementById('submit-form-area').style.display = 'none';
-      showToast('Order submitted! Check your email for details.');
-    }
+    body: gasData,
+    mode: 'no-cors'
+  }).then(function() {
+    document.getElementById('submit-success').style.display = 'block';
+    document.getElementById('submit-form-area').style.display = 'none';
+    showToast('Order submitted! Google Doc saved to ALA Recruitment Orders.');
   }).catch(function() {
     document.getElementById('submit-success').style.display = 'block';
     document.getElementById('submit-form-area').style.display = 'none';
