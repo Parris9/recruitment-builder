@@ -5,173 +5,98 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ALA PALM — Recruitment Plan Builder</title>
 <style>
-
-
-:root{
-  --green:#1D9E75;--gd:#0F6E56;--gl:#E8F7F2;--gm:#5DCAA5;
-  --blue:#185FA5;--bl:#EBF3FC;
-  --amber:#B45309;--al:#FEF3C7;
-  --red:#DC2626;--rl:#FEE2E2;
-  --tx:#111827;--mu:#6B7280;--li:#9CA3AF;
-  --br:#E5E7EB;--bg:#F9FAFB;--su:#FFFFFF;--s2:#F3F4F6;
-  --r:12px;--rs:8px;
-}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;font-size:14px}
-
-/* ── HEADER ── */
-header{background:var(--su);border-bottom:1px solid var(--br);height:56px;padding:0 1.5rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:200}
-.logo{display:flex;align-items:center;gap:10px;cursor:pointer;text-decoration:none}
-.logo-mark{background:var(--green);color:#fff;font-size:11px;font-weight:700;padding:4px 10px;border-radius:6px;letter-spacing:.03em}
-.logo-name{font-size:14px;font-weight:600;color:var(--tx)}
-#hdr-crumb{font-size:13px;color:var(--mu)}
-
-/* ── HOME ── */
-#pg-home{max-width:640px;margin:0 auto;padding:4rem 1.5rem 3rem}
-.home-eyebrow{font-size:12px;font-weight:600;color:var(--green);text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px}
-#pg-home h1{font-size:28px;font-weight:700;line-height:1.2;letter-spacing:-.02em;margin-bottom:10px}
-#pg-home .lead{font-size:14px;color:var(--mu);line-height:1.65;margin-bottom:2rem}
-.home-card{background:var(--su);border:1.5px solid var(--br);border-radius:var(--r);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.25rem;cursor:pointer;transition:box-shadow .15s,border-color .15s}
-.home-card:hover{box-shadow:0 4px 20px rgba(29,158,117,.1);border-color:var(--gm)}
-.home-icon{width:44px;height:44px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
-.home-card h2{font-size:15px;font-weight:600;margin-bottom:3px}
-.home-card p{font-size:13px;color:var(--mu);line-height:1.5}
-.home-arr{margin-left:auto;color:var(--li);font-size:18px;flex-shrink:0;transition:color .15s}
-.home-card:hover .home-arr{color:var(--green)}
-
-/* ── BUILDER ── */
-#pg-builder{display:none}
-.builder-layout{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 56px)}
-.builder-layout.no-sidebar{grid-template-columns:1fr}
-.builder-layout.no-sidebar .main-content{max-width:760px;margin:0 auto}
-
-/* ── SIDEBAR ── */
-.sidebar{background:var(--su);border-right:1px solid var(--br);padding:1.5rem 0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
-.sidebar-section{margin-bottom:.25rem}
-.sidebar-group-label{font-size:10px;font-weight:700;color:var(--li);text-transform:uppercase;letter-spacing:.1em;padding:.75rem 1.25rem .4rem}
-.sidebar-item{display:flex;align-items:center;gap:10px;padding:.6rem 1.25rem;cursor:pointer;font-size:13px;color:var(--mu);transition:background .1s,color .1s;border-left:2px solid transparent}
-.sidebar-item:hover{background:var(--bg);color:var(--tx)}
-.sidebar-item.active{background:var(--gl);color:var(--gd);border-left-color:var(--green);font-weight:500}
-.sidebar-item.done .si-dot{background:var(--green);color:#fff}
-.si-dot{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--br);background:var(--s2);display:flex;align-items:center;justify-content:center;font-size:9px;flex-shrink:0;transition:all .2s}
-.sidebar-item.active .si-dot{border-color:var(--green);background:var(--gl);color:var(--green)}
-.sidebar-item.done .si-dot{border-color:var(--green);background:var(--green);color:#fff}
-
-/* ── MAIN CONTENT ── */
-.main-content{padding:1rem 2rem;max-width:820px}
-.section-panel{display:none}
-.section-panel.active{display:block}
-
-/* ── SECTION HEADER ── */
-.section-hdr{margin-bottom:1.25rem}
-.section-hdr .eyebrow{font-size:11px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.07em;margin-bottom:6px}
-.section-hdr h2{font-size:22px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
-.section-hdr p{font-size:14px;color:var(--mu);line-height:1.6}
-.section-divider{height:1px;background:var(--br);margin:1.75rem 0}
-
-/* ── CARDS ── */
-.card{background:var(--su);border:1px solid var(--br);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem}
-.card-title{font-size:13px;font-weight:600;color:var(--mu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:1.25rem;display:flex;align-items:center;gap:8px}
-.card-title::after{content:'';flex:1;height:1px;background:var(--br)}
-
-/* ── FIELDS ── */
-.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin-bottom:12px}
-.fg.t{grid-template-columns:repeat(auto-fit,minmax(145px,1fr))}
-.fg.f{grid-template-columns:1fr}
-.fg.tw{grid-template-columns:1fr 1fr}
-.fg.third{grid-template-columns:1fr 1fr 1fr}
-.fld{display:flex;flex-direction:column;gap:5px}
-.fld label{font-size:11px;font-weight:500;color:var(--mu)}
-.fld input,.fld select,.fld textarea{font-family:inherit;font-size:14px;padding:9px 12px;border:1px solid var(--br);border-radius:var(--rs);background:var(--su);color:var(--tx);width:100%;transition:border-color .12s,box-shadow .12s}
-.fld input:focus,.fld select:focus,.fld textarea:focus{outline:none;border-color:var(--gm);box-shadow:0 0 0 3px rgba(29,158,117,.1)}
-.fld textarea{min-height:80px;resize:vertical;line-height:1.5}
-.fld input[readonly]{background:var(--s2);color:var(--mu);cursor:default}
-.req{color:var(--red)}
-.field-hint{font-size:11px;color:var(--li);margin-top:2px}
-.warn{font-size:12px;color:var(--red);margin-top:4px;display:none}
-
-/* ── RADIO TYPE CARDS ── */
-.rtype-wrap{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
-.rtype-opt{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border:1.5px solid var(--br);border-radius:var(--rs);cursor:pointer;transition:border-color .12s,background .12s}
-.rtype-opt:hover{border-color:var(--gm);background:var(--gl)}
-.rtype-opt.selected{border-color:var(--green);background:var(--gl)}
-.rtype-opt input[type=radio]{accent-color:var(--green);width:16px;height:16px;flex-shrink:0;margin-top:2px}
-.rtype-title{font-size:14px;font-weight:600;margin-bottom:3px}
-.rtype-desc{font-size:13px;color:var(--mu);line-height:1.5}
-
-/* ── REPEATABLE BLOCKS ── */
-.rep-blk{background:var(--s2);border:1px solid var(--br);border-radius:var(--rs);padding:1.25rem;margin-bottom:10px}
-.rep-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
-.rep-hdr-title{font-size:13px;font-weight:600;color:var(--mu)}
-.rm-btn{background:none;border:none;cursor:pointer;color:var(--li);font-size:12px;padding:4px 8px;border-radius:6px;transition:color .12s,background .12s}
-.rm-btn:hover{color:var(--red);background:var(--rl)}
-.add-btn{width:100%;background:none;border:1.5px dashed var(--br);border-radius:var(--rs);padding:10px;font-size:13px;color:var(--mu);cursor:pointer;margin-bottom:12px;transition:border-color .12s,color .12s;font-family:inherit}
-.add-btn:hover{border-color:var(--gm);color:var(--gd)}
-
-/* ── YES/NO TOGGLE ── */
-.yn-wrap{display:flex;gap:8px;margin-bottom:12px}
-.yn-opt{flex:1;display:flex;align-items:center;justify-content:center;gap:8px;padding:10px;border:1.5px solid var(--br);border-radius:var(--rs);cursor:pointer;font-size:13px;font-weight:500;transition:all .12s}
-.yn-opt:hover{border-color:var(--gm)}
-.yn-opt.yes.selected{border-color:var(--green);background:var(--gl);color:var(--gd)}
-.yn-opt.no.selected{border-color:var(--red);background:var(--rl);color:var(--red)}
-.yn-opt input{accent-color:var(--green);display:none}
-
-/* ── COST TABLE ── */
-.cost-table{width:100%;border-collapse:collapse;margin-bottom:12px;font-size:13px}
-.cost-table th{text-align:left;font-weight:600;color:var(--mu);font-size:11px;text-transform:uppercase;letter-spacing:.05em;padding:6px 10px;background:var(--s2);border:1px solid var(--br)}
-.cost-table td{padding:6px 10px;border:1px solid var(--br);vertical-align:middle}
-.cost-table td input{border:none;background:transparent;width:100%;font-family:inherit;font-size:13px;color:var(--tx);padding:2px 4px}
-.cost-table td input:focus{outline:none}
-.cost-table .total-row td{font-weight:600;background:var(--gl);color:var(--gd)}
-
-/* ── CHECKLIST ── */
-.checklist{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:12px}
-.cl-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border:1px solid var(--br);border-radius:6px;font-size:13px;cursor:pointer}
-.cl-item:hover{background:var(--s2)}
-.cl-item input{accent-color:var(--green);width:14px;height:14px;flex-shrink:0}
-
-/* ── CONTINGENCY PREVIEW ── */
-.cp-preview{background:var(--s2);border:1px solid var(--br);border-left:3px solid var(--gm);border-radius:var(--rs);padding:1rem 1.25rem;font-size:13px;color:var(--mu);line-height:1.7;margin-top:10px}
-.cp-preview strong{color:var(--gd)}
-
-/* ── BADGE ── */
-.badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
-.badge-req{background:var(--al);color:var(--amber)}
-.badge-done{background:var(--gl);color:var(--gd)}
-.badge-opt{background:var(--s2);color:var(--mu)}
-
-/* ── INFO BOX ── */
-.info-box{background:var(--bl);border:1px solid #BFDBFE;border-radius:var(--rs);padding:10px 14px;font-size:13px;color:var(--blue);margin-bottom:12px;line-height:1.5}
-
-/* ── NAVIGATION ── */
-.section-nav{display:flex;justify-content:space-between;align-items:center;padding-top:1.5rem;margin-top:1.5rem;border-top:1px solid var(--br)}
-.btn{font-family:inherit;font-size:13px;font-weight:500;padding:9px 18px;border-radius:var(--rs);cursor:pointer;border:1px solid var(--br);background:var(--su);color:var(--tx);display:inline-flex;align-items:center;gap:6px;transition:all .12s}
-.btn:hover{background:var(--s2);border-color:#D1D5DB}
-.btn.primary{background:var(--green);color:#fff;border-color:var(--green)}
-.btn.primary:hover{background:var(--gd);border-color:var(--gd)}
-.btn.export-btn{background:var(--blue);color:#fff;border-color:var(--blue)}
-.btn.export-btn:hover{background:#1251A3}
-.btn.ghost{border-color:transparent;color:var(--mu)}
-.btn.ghost:hover{background:var(--s2);border-color:var(--br);color:var(--tx)}
-
-/* ── PROGRESS ── */
-.progress-bar{height:3px;background:var(--br);position:sticky;top:56px;z-index:199}
-.progress-fill{height:3px;background:var(--green);transition:width .3s;width:0%}
-
-/* ── TOAST ── */
-#toast{position:fixed;bottom:1.5rem;right:1.5rem;background:#111827;color:#fff;padding:11px 18px;border-radius:var(--rs);font-size:13px;opacity:0;transform:translateY(8px);transition:opacity .2s,transform .2s;pointer-events:none;z-index:999;max-width:320px}
-#toast.on{opacity:1;transform:translateY(0)}
-
-@media(max-width:700px){
-  .builder-layout{grid-template-columns:1fr}
-  .sidebar{display:none}
-  .main-content{padding:0.75rem 1rem}
-  #pg-home{padding:3rem 1rem 2rem}
-  .fg,.fg.tw,.fg.t,.fg.third{grid-template-columns:1fr}
-  .checklist{grid-template-columns:1fr}
-}
-
-
+  :root {
+    --green:#0B6E4F;--gd:#064534;--gm:#1A9E72;--gl:#E6F5EF;
+    --accent:#F4A020;--tx:#111827;--mu:#6B7280;
+    --s1:#FFFFFF;--s2:#F9FAFB;--br:#E5E7EB;--li:#D1D5DB;--r:10px;
+    --warn:#FEF3C7;--warn-br:#FCD34D;--warn-tx:#92400E;
+    --info:#EFF6FF;--info-br:#BFDBFE;--info-tx:#1E40AF;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{font-size:15px}
+  body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#F3F4F6;color:var(--tx);min-height:100vh}
+  header{position:sticky;top:0;z-index:100;height:56px;background:var(--green);display:flex;align-items:center;gap:14px;padding:0 1.5rem;box-shadow:0 1px 3px rgba(0,0,0,.15)}
+  .logo{display:flex;align-items:center;gap:10px;text-decoration:none;cursor:pointer}
+  .logo-mark{background:#fff;color:var(--green);font-weight:800;font-size:13px;letter-spacing:.04em;padding:4px 8px;border-radius:6px}
+  .logo-name{color:#fff;font-weight:600;font-size:15px;letter-spacing:-.01em}
+  #hdr-crumb{margin-left:auto;color:rgba(255,255,255,.7);font-size:13px}
+  #pg-home{max-width:680px;margin:0 auto;padding:3.5rem 1.5rem 2rem}
+  .home-eyebrow{font-size:11px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--gm);margin-bottom:10px}
+  #pg-home h1{font-size:2rem;font-weight:800;color:var(--gd);line-height:1.2;margin-bottom:10px;letter-spacing:-.02em}
+  .lead{font-size:15px;color:var(--mu);line-height:1.6;margin-bottom:2rem}
+  .home-card{display:flex;align-items:center;gap:16px;background:var(--s1);border:1.5px solid var(--br);border-radius:var(--r);padding:1.25rem 1.5rem;cursor:pointer;transition:border-color .15s,box-shadow .15s,transform .1s}
+  .home-card:hover{border-color:var(--gm);box-shadow:0 4px 16px rgba(11,110,79,.12);transform:translateY(-1px)}
+  .home-card h2{font-size:15px;font-weight:700;color:var(--tx);margin-bottom:3px}
+  .home-card p{font-size:13px;color:var(--mu);line-height:1.5}
+  .home-icon{width:44px;height:44px;flex-shrink:0;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px}
+  .home-arr{margin-left:auto;color:var(--li);font-size:20px;flex-shrink:0;transition:color .15s}
+  .home-card:hover .home-arr{color:var(--gm)}
+  #pg-builder{display:none}
+  .progress-bar{height:3px;background:var(--br)}
+  .progress-fill{height:100%;background:var(--gm);width:0;transition:width .4s}
+  .builder-layout{display:grid;grid-template-columns:230px 1fr;min-height:calc(100vh - 59px)}
+  .sidebar{background:var(--s1);border-right:1px solid var(--br);padding:1.5rem 0;position:sticky;top:56px;height:calc(100vh - 56px);overflow-y:auto}
+  .sidebar-group-label{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--mu);padding:0 1.25rem;margin:1rem 0 .4rem}
+  .sidebar-item{display:flex;align-items:center;gap:10px;padding:.55rem 1.25rem;font-size:13.5px;color:var(--mu);cursor:pointer;border-left:3px solid transparent;transition:background .1s,color .1s}
+  .sidebar-item:hover{background:var(--s2);color:var(--tx)}
+  .sidebar-item.active{background:var(--gl);color:var(--gd);border-left-color:var(--green);font-weight:600}
+  .si-dot{width:20px;height:20px;flex-shrink:0;border-radius:50%;border:2px solid var(--li);background:var(--s1);display:flex;align-items:center;justify-content:center;font-size:10px;transition:border-color .15s,background .15s}
+  .sidebar-item.active .si-dot{border-color:var(--green);background:var(--gl);color:var(--green)}
+  .main-content{padding:1.75rem 2rem;max-width:860px}
+  .section-panel{display:none}
+  .section-panel.active{display:block}
+  .card{background:var(--s1);border:1px solid var(--br);border-radius:var(--r);padding:1.5rem;margin-bottom:1rem;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+  .card-title{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--gm);padding-bottom:10px;margin-bottom:14px;border-bottom:1px solid var(--br)}
+  .fg{display:flex;gap:14px;margin-bottom:12px;flex-wrap:wrap}
+  .fg.t>.fld{flex:1;min-width:180px}
+  .fg.tw>.fld{flex:1;min-width:220px}
+  .fg.f>.fld{flex:1;min-width:100%}
+  .fld{display:flex;flex-direction:column;gap:5px}
+  label{font-size:12px;font-weight:600;color:#374151;letter-spacing:.01em}
+  input[type=text],input[type=number],input[type=date],input[type=email],input[type=tel],input[type=url],select,textarea{border:1.5px solid var(--br);border-radius:7px;padding:8px 11px;font-size:14px;color:var(--tx);background:var(--s1);width:100%;transition:border-color .15s,box-shadow .15s;font-family:inherit}
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--gm);box-shadow:0 0 0 3px rgba(26,158,114,.12)}
+  input[readonly]{background:var(--s2);color:var(--mu);cursor:default}
+  textarea{min-height:80px;resize:vertical;line-height:1.5}
+  select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236B7280' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 11px center;padding-right:30px}
+  .req{color:#EF4444}
+  .btn{display:inline-flex;align-items:center;gap:6px;padding:9px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;border:1.5px solid var(--br);background:var(--s1);color:var(--tx);transition:background .15s,border-color .15s,box-shadow .15s;font-family:inherit}
+  .btn:hover{background:var(--s2)}
+  .btn.primary{background:var(--green);color:#fff;border-color:var(--green)}
+  .btn.primary:hover{background:var(--gd);border-color:var(--gd)}
+  .btn.ghost{background:transparent;border-color:var(--br);color:var(--mu)}
+  .btn.ghost:hover{background:var(--s2);color:var(--tx)}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .rep-blk{border:1.5px solid var(--br);border-radius:8px;padding:1rem 1.125rem;margin-bottom:.75rem;background:var(--s2)}
+  .rep-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:.75rem}
+  .rep-hdr-title{font-size:13px;font-weight:700;color:var(--gd)}
+  .rm-btn{font-size:12px;color:#EF4444;background:none;border:none;cursor:pointer;padding:2px 6px;border-radius:4px}
+  .rm-btn:hover{background:#FEF2F2}
+  .add-btn{width:100%;padding:9px;border:1.5px dashed var(--br);border-radius:8px;background:transparent;color:var(--gm);font-size:13px;font-weight:600;cursor:pointer;text-align:center;transition:background .15s,border-color .15s;font-family:inherit;margin-top:4px}
+  .add-btn:hover{background:var(--gl);border-color:var(--gm)}
+  .info-box{background:var(--info);border:1px solid var(--info-br);border-radius:7px;padding:9px 13px;font-size:13px;color:var(--info-tx);margin-bottom:12px;line-height:1.5}
+  .warn{background:var(--warn);border:1px solid var(--warn-br);border-radius:7px;padding:8px 12px;font-size:12px;color:var(--warn-tx);margin-top:4px}
+  .ck-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;margin-top:8px}
+  .ck-opt{display:flex;align-items:flex-start;gap:7px;font-size:13px;color:var(--tx);cursor:pointer;line-height:1.4}
+  .ck-opt input[type=checkbox]{width:15px;height:15px;min-width:15px;margin-top:2px;accent-color:var(--green);border-radius:3px}
+  .cost-table{width:100%;border-collapse:collapse;font-size:13px;margin-top:10px}
+  .cost-table th{background:var(--s2);padding:7px 10px;text-align:left;font-size:11px;font-weight:700;color:var(--mu);border-bottom:1px solid var(--br)}
+  .cost-table td{padding:6px 10px;border-bottom:1px solid var(--br)}
+  .cost-table td input,.cost-table td select{border:1px solid var(--br);border-radius:5px;padding:4px 7px;width:100%;font-size:13px}
+  .total-row td{font-weight:700;background:var(--s2);color:var(--gd)}
+  .rtype-wrap{display:flex;flex-direction:column;gap:10px;margin-top:8px}
+  .rtype-opt{display:flex;align-items:flex-start;gap:12px;border:1.5px solid var(--br);border-radius:9px;padding:1rem 1.125rem;cursor:pointer;transition:border-color .15s,background .15s}
+  .rtype-opt:hover{border-color:var(--gm);background:var(--gl)}
+  .rtype-opt.selected{border-color:var(--green);background:var(--gl)}
+  .rtype-opt input[type=radio]{margin-top:3px;accent-color:var(--green)}
+  .rtype-title{font-size:14px;font-weight:700;color:var(--tx);margin-bottom:3px}
+  .rtype-desc{font-size:12.5px;color:var(--mu);line-height:1.5}
+  .section-nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 0;border-top:1px solid var(--br);margin-top:.5rem}
+  .badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
+  #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--gd);color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .25s;z-index:9999;white-space:nowrap}
+  #toast.show{opacity:1}
+  .builder-layout.no-sidebar{grid-template-columns:1fr}
+  .builder-layout.no-sidebar .main-content{max-width:760px;margin:0 auto}
+  @media(max-width:700px){.builder-layout{grid-template-columns:1fr}.sidebar{display:none}.main-content{padding:.75rem 1rem}#pg-home{padding:2rem 1rem 1.5rem}.fg,.fg.t,.fg.tw{flex-direction:column}.ck-grid{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -192,7 +117,7 @@ header{background:var(--su);border-bottom:1px solid var(--br);height:56px;paddin
   <div id="type-cards" style="display:flex;flex-direction:column;gap:12px;margin-bottom:2rem">
     <div class="home-card" id="card-standard" data-rtype="Standard" style="border-color:var(--br)">
       <div class="home-icon" style="background:#E8F7F2;font-size:20px">📋</div>
-      <div><h2>Standard / New Recruitment Plan</h2><p>Mobilisation of workers from their home country on a new visa or existing multi-year visa.</p></div>
+      <div><h2>Standard / New Recruitment Plan</h2><p>New recruitment of workers from their home country — covers first-time mobilisation on a new visa.</p></div>
       <div class="home-arr" style="color:var(--li)">→</div>
     </div>
     <div style="border:1.5px solid var(--br);border-radius:var(--r);padding:1.25rem 1.5rem;display:flex;align-items:center;gap:1.25rem;opacity:0.5;cursor:not-allowed;background:var(--s2)">
@@ -254,9 +179,9 @@ header{background:var(--su);border-bottom:1px solid var(--br);height:56px;paddin
           </div>
         </div>
         <div class="card">
-          <div class="card-title">Job orders</div><div class="info-box" style="margin-bottom:10px">Add each job order for this client. One client can have multiple job orders with different roles, sites, and worker counts.</div>
+          <div class="card-title">Job order / LMT job order</div><div class="info-box" style="margin-bottom:10px">Add each job order for this client. One client can have multiple job orders with different roles, sites, and worker counts.</div>
           <div id="roles-wrap"></div>
-          <button class="add-btn" id="btn-add-role">+ Add another job order</button>
+          <button class="add-btn" id="btn-add-role">+ Add another job order / LMT job order</button>
         </div>
         <div class="section-nav">
           <button class="btn ghost" id="btn-home">← Home</button>
@@ -417,50 +342,61 @@ header{background:var(--su);border-bottom:1px solid var(--br);height:56px;paddin
         <div class="card">
           <div class="card-title">Pay details</div>
           <div class="fg t">
+            <div class="fld"><label>Pay type <span class="req">*</span></label>
+              <select id="rp_pay_type" onchange="handlePayType()">
+                <option value="">— select —</option>
+                <option value="hourly">Hourly rate only</option>
+                <option value="piecerate">Piece rate only</option>
+                <option value="mixed">Hourly + piece rate (mixed)</option>
+              </select>
+            </div>
             <div class="fld"><label>Award &amp; level</label><input type="text" id="rp_award" placeholder="e.g. Horticulture Award — Level 1"></div>
-            <div class="fld"><label>Pay rate ($/hr) <span class="req">*</span></label><input type="text" id="rp_pay" placeholder="e.g. $24.50"></div>
+          </div>
+          <div class="fg t">
             <div class="fld"><label>Pay frequency <span class="req">*</span></label>
               <select id="rp_pay_freq">
                 <option value="">— select —</option>
                 <option>Weekly</option><option>Fortnightly</option><option>Four-weekly</option>
               </select>
             </div>
-          </div>
-          <div class="fg tw">
             <div class="fld"><label>Guaranteed hours/week (min)</label><input type="number" id="rp_hrs_pw" placeholder="e.g. 38"></div>
+          </div>
+          <div id="pay-hourly-section" style="display:none">
+            <div style="height:1px;background:var(--br);margin:12px 0"></div>
+            <div class="fg tw">
+              <div class="fld"><label>Hourly rate ($/hr) <span class="req">*</span></label>
+                <input type="text" id="rp_pay" placeholder="e.g. $24.50">
+              </div>
+            </div>
           </div>
           <div id="piece-rate-section" style="display:none">
             <div style="height:1px;background:var(--br);margin:12px 0"></div>
-            <div class="fg f"><div class="fld"><label>Piecework arrangement</label>
-              <select id="pr_arrangement" onchange="togglePieceworkArrangement()">
-                <option value="">— select —</option>
-                <option value="hourly_plus">Hourly rate + Piecework</option>
-                <option value="piecework_only">Piecework only</option>
-              </select>
-            </div></div>
-            <div id="piece-rate-details" style="display:none;margin-top:10px">
-              <div class="info-box">Piecework rate must ensure workers earn at least the applicable Award hourly rate.</div>
-              <table class="cost-table" style="margin-bottom:10px">
-                <thead><tr>
-                  <th style="width:40%">Work type / task</th>
-                  <th style="width:25%">Min. piecework rate ($)</th>
-                  <th style="width:22%">Unit</th>
-                  <th style="width:13%"></th>
-                </tr></thead>
-                <tbody id="pr-rows"></tbody>
-              </table>
-              <button class="add-btn" id="btn-add-pr-row" type="button" style="margin-bottom:10px">+ Add work type</button>
-              <div class="fg tw">
-                <div class="fld"><label>Minimum guaranteed hourly rate (floor)</label>
-                  <input type="text" id="pr_min_rate" placeholder="e.g. $24.50/hr">
-                </div>
-                <div class="fld"><label>How is output measured / recorded?</label>
-                  <input type="text" id="pr_measurement" placeholder="e.g. Supervisor counts bins daily">
-                </div>
+            <div class="info-box">Add each task or activity that has a piece rate. The rate must ensure workers earn at least the applicable award hourly rate.</div>
+            <div style="overflow-x:auto">
+            <table class="cost-table" style="margin-bottom:10px;min-width:600px">
+              <thead><tr>
+                <th style="width:35%">Task / activity description</th>
+                <th style="width:18%">Piece rate ($)</th>
+                <th style="width:18%">Per (unit)</th>
+                <th style="width:22%">Custom unit (if Other)</th>
+                <th style="width:7%"></th>
+              </tr></thead>
+              <tbody id="pr-rows"></tbody>
+            </table>
+            </div>
+            <button class="add-btn" id="btn-add-pr-row" type="button" onclick="addPrRow()" style="margin-bottom:12px">+ Add task / activity</button>
+            <div class="fg tw">
+              <div class="fld"><label>Minimum guaranteed floor rate</label>
+                <input type="text" id="pr_min_rate" placeholder="e.g. $24.50/hr">
               </div>
-              <div class="fg f"><div class="fld"><label>Additional piecework notes</label>
-                <textarea id="pr_notes" placeholder="e.g. Piecework applies during peak harvest only."></textarea>
-              </div></div>
+              <div class="fld"><label>How is output measured?</label>
+                <input type="text" id="pr_measurement" placeholder="e.g. Supervisor counts bins daily">
+              </div>
+            </div>
+            <div class="fg f">
+              <div class="fld"><label>Additional piece rate notes</label>
+                <textarea id="pr_notes" placeholder="e.g. Piece rate applies during peak harvest only. Workers guaranteed floor rate if piece rate earnings fall below."></textarea>
+              </div>
             </div>
           </div>
         </div>
@@ -695,36 +631,33 @@ header{background:var(--su);border-bottom:1px solid var(--br);height:56px;paddin
 <div class="section-panel" id="s-contingency">
         <div class="card">
           <div class="card-title">Contingency plan</div>
-          <div class="info-box">Fill in the details below. The contingency plan text will generate automatically from your inputs.</div>
-          <div class="fg t">
-            <div class="fld"><label>Approved Employer (AE) name <span class="req">*</span></label>
-              <input type="text" id="cp_ae" placeholder="e.g. Agri Labour Australia" oninput="updateContingencyPreview()">
+          <div class="fg tw">
+            <div class="fld"><label>Regions covered</label>
+              <input type="text" id="cp_regions" placeholder="e.g. Bundaberg, Emerald, Bowen" oninput="updateContingencyPreview()">
             </div>
-            <div class="fld"><label>Host employer name <span class="req">*</span></label>
-              <input type="text" id="cp_employer" placeholder="e.g. Mort and Co Fertilisers" oninput="updateContingencyPreview()">
+            <div class="fld"><label>Number of work sites</label>
+              <input type="number" id="cp_count" placeholder="e.g. 2" oninput="updateContingencyPreview()">
             </div>
-            <div class="fld"><label>State(s) <span class="req">*</span></label>
+          </div>
+          <div class="fg f">
+            <div class="fld"><label>States covered</label>
               <input type="text" id="cp_states" placeholder="e.g. QLD, NSW" oninput="updateContingencyPreview()">
             </div>
           </div>
-          <div class="fg tw">
-            <div class="fld"><label>Number of regions</label>
-              <input type="number" id="cp_count" placeholder="e.g. 2" min="1" max="6" oninput="renderRegionFields()">
+          <div class="fg f">
+            <div class="fld"><label>Contingency plan preview</label>
+              <div id="cp_preview" style="background:var(--s2);border:1px solid var(--br);border-radius:6px;padding:10px 14px;font-size:13px;color:var(--tx);min-height:60px;line-height:1.6"></div>
             </div>
-          </div>
-          <div id="cp-region-fields" style="margin-top:8px"></div>
-          <div class="fld" style="margin-top:14px">
-            <label>Contingency plan preview</label>
-            <div id="cp_preview" style="background:var(--s2);border:1px solid var(--br);border-radius:7px;padding:12px 14px;font-size:13px;color:var(--tx);min-height:80px;line-height:1.8;white-space:pre-wrap"></div>
           </div>
         </div>
         <div class="section-nav">
-          <button class="btn ghost" onclick="goTo('s-transport')">Back</button>
-          <button class="btn primary" onclick="goTo('s-cultural')">Next: Cultural competency</button>
+          <button class="btn ghost" onclick="goTo('s-transport')">← Back</button>
+          <button class="btn primary" onclick="goTo('s-cultural')">Next: Cultural competency →</button>
         </div>
       </div>
 
-<div class="section-panel" id="s-cultural">
+      <!-- CULTURAL COMPETENCY -->
+      <div class="section-panel" id="s-cultural">
         <div class="card">
           <div class="card-title">Cultural competency contact</div>
           <div class="fg tw">
@@ -766,7 +699,7 @@ header{background:var(--su);border-bottom:1px solid var(--br);height:56px;paddin
 
           <div class="card" style="border-color:var(--gm)">
             <div class="card-title">Submit or export</div>
-            <div class="info-box" style="margin-bottom:16px">Check the summary above, then submit directly to ALA or export a Word document.</div>
+            <div class="info-box" style="margin-bottom:16px">Review the details above before submitting. Once submitted, the ALA PALM Compliance team will be in touch to confirm and progress the order.</div>
             <div style="display:flex;gap:12px;flex-wrap:wrap">
               <button class="btn primary" id="btn-submit-form" onclick="submitForm()" style="font-size:14px;padding:12px 24px">
                 ✉ Submit to ALA
@@ -776,7 +709,7 @@ header{background:var(--su);border-bottom:1px solid var(--br);height:56px;paddin
               </button>
             </div>
             <div style="margin-top:10px;font-size:12px;color:var(--mu)">
-              Submitting sends the order directly to the ALA Compliance team. You can also export a Word doc as a backup copy.
+              Submitting will notify the Compliance team. You can also export a Word doc as a backup copy.
             </div>
           </div>
         </div>
@@ -807,7 +740,8 @@ header{background:var(--su);border-bottom:1px solid var(--br);height:56px;paddin
 
 <div id="toast"></div>
 
-<script>function makeSelect(labelText, inputId, options) {
+<script>
+function makeSelect(labelText, inputId, options) {
   var div = document.createElement('div');
   div.className = 'fld';
   var lbl = document.createElement('label');
@@ -2135,6 +2069,25 @@ function updatePieceRateVisibility() {
   }
 }
 
+function handlePayType() {
+  var val = gv('rp_pay_type');
+  var hourly = document.getElementById('pay-hourly-section');
+  var piece = document.getElementById('piece-rate-section');
+  if (val === 'hourly') {
+    if (hourly) hourly.style.display = 'block';
+    if (piece) piece.style.display = 'none';
+  } else if (val === 'piecerate') {
+    if (hourly) hourly.style.display = 'none';
+    if (piece) { piece.style.display = 'block'; if (!document.getElementById('pr-row-0')) addPrRow(); }
+  } else if (val === 'mixed') {
+    if (hourly) hourly.style.display = 'block';
+    if (piece) { piece.style.display = 'block'; if (!document.getElementById('pr-row-0')) addPrRow(); }
+  } else {
+    if (hourly) hourly.style.display = 'none';
+    if (piece) piece.style.display = 'none';
+  }
+}
+
 function updateVisaOptions() {
   var prog = gv('rp_prog');
   var country = gv('rp_country');
@@ -2205,24 +2158,17 @@ function handleAccomStatus() {
 function handleAccomProvider() {
   var val = gv('accom_provider');
   var hint = document.getElementById('accom-provider-hint');
-  var statusRow = document.getElementById('accom_status') ? document.getElementById('accom_status').closest('.fg') : null;
-  var newWrap = document.getElementById('accom-new-wrap');
-  var photoWrap = document.getElementById('accom-photo-wrap');
-  var statusHint = document.getElementById('accom-status-hint');
-
-  if (val === 'Private') {
-    if (hint) hint.textContent = 'Private accommodation — address only required.';
-    if (statusRow) statusRow.style.display = 'none';
-    if (newWrap) newWrap.style.display = 'none';
-    if (photoWrap) photoWrap.style.display = 'none';
-    if (statusHint) statusHint.style.display = 'none';
+  if (val === 'ALA') {
+    if (hint) hint.textContent = 'ALA is arranging accommodation.';
+  } else if (val === 'Client') {
+    if (hint) hint.textContent = 'Client is providing accommodation.';
+  } else if (val === 'Private') {
+    if (hint) hint.textContent = 'Private accommodation.';
   } else {
-    if (statusRow) statusRow.style.display = '';
-    if (val === 'ALA') { if (hint) hint.textContent = 'ALA is arranging accommodation.'; }
-    else if (val === 'Client') { if (hint) hint.textContent = 'Client is providing accommodation.'; }
-    else { if (hint) hint.textContent = ''; }
-    handleAccomStatus();
+    if (hint) hint.textContent = '';
   }
+  // Re-run status handler to show/hide correct sections
+  handleAccomStatus();
 }
 
 
@@ -2425,6 +2371,7 @@ function collectFormData() {
   data['Visa Length'] = gv('rp_visa');
   data['Mobilisation Date'] = gv('rp_start');
   data['Contract End Date'] = gv('rp_end');
+  data['Pay Type'] = {'hourly':'Hourly rate only','piecerate':'Piece rate only','mixed':'Hourly + piece rate (mixed)'}[gv('rp_pay_type')] || '';
   data['Pay Rate'] = gv('rp_pay');
   data['Pay Frequency'] = gv('rp_pay_freq');
   data['Guaranteed Hours/Week'] = gv('rp_hrs_pw');
@@ -2736,44 +2683,40 @@ function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
 function fd(v){if(!v)return'-';var d=new Date(v+'T00:00:00');return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'});}
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},3000);}
 function getChecked(name){return Array.from(document.querySelectorAll('input[name="'+name+'"]:checked')).map(function(c){return c.value;}).join(', ');}
-function renderRegionFields() {
-  var count = parseInt((document.getElementById('cp_count')||{}).value||0)||0;
-  var wrap = document.getElementById('cp-region-fields');
-  if (!wrap) return;
-  wrap.innerHTML = '';
-  for (var i = 0; i < Math.min(count, 6); i++) {
-    var blk = document.createElement('div');
-    blk.style.cssText = 'border:1px solid var(--br);border-radius:8px;padding:12px;margin-bottom:8px;background:var(--s2)';
-    blk.innerHTML = '<div style="font-size:12px;font-weight:700;color:var(--gd);margin-bottom:8px">Region ' + (i+1) + '</div>' +
-      '<div class="fg tw">' +
-        '<div class="fld"><label>Region name</label><input type="text" id="cp_rn_' + i + '" placeholder="e.g. Northern Region" oninput="updateContingencyPreview()"></div>' +
-        '<div class="fld"><label>Locations (comma separated)</label><input type="text" id="cp_rl_' + i + '" placeholder="e.g. Bundaberg, Childers" oninput="updateContingencyPreview()"></div>' +
-      '</div>';
-    wrap.appendChild(blk);
-  }
-  updateContingencyPreview();
-}
+function addPrRow() {
+  var tbody = document.getElementById('pr-rows');
+  if (!tbody) return;
+  var idx = tbody.rows.length;
+  var tr = tbody.insertRow();
+  tr.id = 'pr-row-' + idx;
 
-function updateContingencyPreview() {
-  var el = document.getElementById('cp_preview');
-  if (!el) return;
-  var ae = (document.getElementById('cp_ae')||{}).value || '[AE Name]';
-  var emp = (document.getElementById('cp_employer')||{}).value || '[Employer Name]';
-  var states = (document.getElementById('cp_states')||{}).value || '[State]';
-  var count = parseInt((document.getElementById('cp_count')||{}).value||0)||0;
-  var regionText = '';
-  for (var i = 0; i < Math.min(count, 6); i++) {
-    var rname = (document.getElementById('cp_rn_' + i)||{}).value || '[Region Name]';
-    var rlocs = (document.getElementById('cp_rl_' + i)||{}).value || '';
-    var locList = rlocs ? rlocs.split(',').map(function(l){ return '\u2022 ' + l.trim(); }).join('\n') : '\u2022 [Location]';
-    regionText += rname + '\n' + locList + '\n\n';
+  var td1 = tr.insertCell(); 
+  var i1 = document.createElement('input'); i1.type='text'; i1.id='pr_task_'+idx; i1.placeholder='e.g. Citrus picking, Apple packing, Bin tipping'; i1.style.width='100%'; td1.appendChild(i1);
+
+  var td2 = tr.insertCell();
+  var i2 = document.createElement('input'); i2.type='number'; i2.id='pr_rate_'+idx; i2.placeholder='e.g. 2.50'; i2.min='0'; i2.step='0.01'; i2.style.width='100%'; td2.appendChild(i2);
+
+  var td3 = tr.insertCell();
+  var sel = document.createElement('select'); sel.id='pr_unit_'+idx; sel.style.width='100%';
+  var units = ['','Bin','Bucket','Kg','Tray','Box','Bag','Pallet','Row','Tree','Hour','Other'];
+  var labels = ['-- per --','Bin','Bucket','Kg','Tray','Box','Bag','Pallet','Row','Tree','Hour','Other'];
+  for (var u=0; u<units.length; u++) {
+    var opt = document.createElement('option'); opt.value=units[u]; opt.textContent=labels[u]; sel.appendChild(opt);
   }
-  var visa = "remainder of the worker" + "\u0027" + "s visa";
-  el.textContent =
-    'In an unlikely event of requiring contingency plans to be activated, ' + ae + ' will work closely with ' + emp + ' to ensure that workers can be re-deployed into the same roles into other regions. ' + emp + ' services ' + (count||'[NUMBER]') + ' region(s) across regional ' + states + ', namely:\n\n' +
-    (regionText || '[Region details to be added above]\n\n') +
-    'Further, should work not be available in other locations with ' + emp + ', ' + ae + ' can deploy the workers to other providers on either a temporary basis or for the ' + visa + '.\n\n' +
-    'Should a contingency plan be activated, ' + ae + ' will organise and manage the accommodation and transportation required for the workers. ' + ae + ' will also notify the department in accordance with the guidelines.';
+  sel.addEventListener('change', (function(i){ return function(){ var c=document.getElementById('pr_custom_wrap_'+i); if(c) c.style.display=this.value==='Other'?'block':'none'; }; })(idx));
+  td3.appendChild(sel);
+
+  var td4 = tr.insertCell();
+  var wrap = document.createElement('div'); wrap.id='pr_custom_wrap_'+idx; wrap.style.display='none';
+  var i4 = document.createElement('input'); i4.type='text'; i4.id='pr_custom_'+idx; i4.placeholder='e.g. Punnet, Crate'; i4.style.width='100%';
+  wrap.appendChild(i4); td4.appendChild(wrap);
+
+  var td5 = tr.insertCell();
+  if (idx > 0) {
+    var rm = document.createElement('button'); rm.type='button'; rm.className='rm-btn'; rm.textContent='x';
+    rm.addEventListener('click', (function(row){ return function(){ row.remove(); }; })(tr));
+    td5.appendChild(rm);
+  }
 }
 
 function makeDivider() {
@@ -4085,6 +4028,25 @@ function updatePieceRateVisibility() {
   }
 }
 
+function handlePayType() {
+  var val = gv('rp_pay_type');
+  var hourly = document.getElementById('pay-hourly-section');
+  var piece = document.getElementById('piece-rate-section');
+  if (val === 'hourly') {
+    if (hourly) hourly.style.display = 'block';
+    if (piece) piece.style.display = 'none';
+  } else if (val === 'piecerate') {
+    if (hourly) hourly.style.display = 'none';
+    if (piece) { piece.style.display = 'block'; if (!document.getElementById('pr-row-0')) addPrRow(); }
+  } else if (val === 'mixed') {
+    if (hourly) hourly.style.display = 'block';
+    if (piece) { piece.style.display = 'block'; if (!document.getElementById('pr-row-0')) addPrRow(); }
+  } else {
+    if (hourly) hourly.style.display = 'none';
+    if (piece) piece.style.display = 'none';
+  }
+}
+
 function updateVisaOptions() {
   var prog = gv('rp_prog');
   var country = gv('rp_country');
@@ -4155,24 +4117,17 @@ function handleAccomStatus() {
 function handleAccomProvider() {
   var val = gv('accom_provider');
   var hint = document.getElementById('accom-provider-hint');
-  var statusRow = document.getElementById('accom_status') ? document.getElementById('accom_status').closest('.fg') : null;
-  var newWrap = document.getElementById('accom-new-wrap');
-  var photoWrap = document.getElementById('accom-photo-wrap');
-  var statusHint = document.getElementById('accom-status-hint');
-
-  if (val === 'Private') {
-    if (hint) hint.textContent = 'Private accommodation — address only required.';
-    if (statusRow) statusRow.style.display = 'none';
-    if (newWrap) newWrap.style.display = 'none';
-    if (photoWrap) photoWrap.style.display = 'none';
-    if (statusHint) statusHint.style.display = 'none';
+  if (val === 'ALA') {
+    if (hint) hint.textContent = 'ALA is arranging accommodation.';
+  } else if (val === 'Client') {
+    if (hint) hint.textContent = 'Client is providing accommodation.';
+  } else if (val === 'Private') {
+    if (hint) hint.textContent = 'Private accommodation.';
   } else {
-    if (statusRow) statusRow.style.display = '';
-    if (val === 'ALA') { if (hint) hint.textContent = 'ALA is arranging accommodation.'; }
-    else if (val === 'Client') { if (hint) hint.textContent = 'Client is providing accommodation.'; }
-    else { if (hint) hint.textContent = ''; }
-    handleAccomStatus();
+    if (hint) hint.textContent = '';
   }
+  // Re-run status handler to show/hide correct sections
+  handleAccomStatus();
 }
 
 
@@ -4375,6 +4330,7 @@ function collectFormData() {
   data['Visa Length'] = gv('rp_visa');
   data['Mobilisation Date'] = gv('rp_start');
   data['Contract End Date'] = gv('rp_end');
+  data['Pay Type'] = {'hourly':'Hourly rate only','piecerate':'Piece rate only','mixed':'Hourly + piece rate (mixed)'}[gv('rp_pay_type')] || '';
   data['Pay Rate'] = gv('rp_pay');
   data['Pay Frequency'] = gv('rp_pay_freq');
   data['Guaranteed Hours/Week'] = gv('rp_hrs_pw');
@@ -4686,6 +4642,7 @@ function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
 function fd(v){if(!v)return'-';var d=new Date(v+'T00:00:00');return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'});}
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},3000);}
 function getChecked(name){return Array.from(document.querySelectorAll('input[name="'+name+'"]:checked')).map(function(c){return c.value;}).join(', ');}
+
 
 </script>
 </body>
