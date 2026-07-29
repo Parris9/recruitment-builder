@@ -2373,6 +2373,24 @@ function collectFormData() {
   data['Contract End Date'] = gv('rp_end');
   data['Pay Type'] = {'hourly':'Hourly rate only','piecerate':'Piece rate only','mixed':'Hourly + piece rate (mixed)'}[gv('rp_pay_type')] || '';
   data['Pay Rate'] = gv('rp_pay');
+
+  // Piece rate tasks
+  var prRows = [];
+  var tbody = document.getElementById('pr-rows');
+  if (tbody) {
+    for (var ri = 0; ri < tbody.rows.length; ri++) {
+      var task = document.getElementById('pr_task_'+ri) ? document.getElementById('pr_task_'+ri).value : '';
+      var rate = document.getElementById('pr_rate_'+ri) ? document.getElementById('pr_rate_'+ri).value : '';
+      var unit = document.getElementById('pr_unit_'+ri) ? document.getElementById('pr_unit_'+ri).value : '';
+      var custom = document.getElementById('pr_custom_'+ri) ? document.getElementById('pr_custom_'+ri).value : '';
+      var unitLabel = unit === 'Other' ? custom : unit;
+      if (task || rate) prRows.push(task + ' — $' + rate + ' per ' + (unitLabel || 'unit'));
+    }
+  }
+  data['Piece Rate Tasks'] = prRows.join(' | ');
+  data['Piece Rate Floor'] = gv('pr_min_rate');
+  data['Piece Rate Measurement'] = gv('pr_measurement');
+  data['Piece Rate Notes'] = gv('pr_notes');
   data['Pay Frequency'] = gv('rp_pay_freq');
   data['Guaranteed Hours/Week'] = gv('rp_hrs_pw');
   data['Award & Level'] = gv('rp_award');
@@ -4332,6 +4350,24 @@ function collectFormData() {
   data['Contract End Date'] = gv('rp_end');
   data['Pay Type'] = {'hourly':'Hourly rate only','piecerate':'Piece rate only','mixed':'Hourly + piece rate (mixed)'}[gv('rp_pay_type')] || '';
   data['Pay Rate'] = gv('rp_pay');
+
+  // Piece rate tasks
+  var prRows = [];
+  var tbody = document.getElementById('pr-rows');
+  if (tbody) {
+    for (var ri = 0; ri < tbody.rows.length; ri++) {
+      var task = document.getElementById('pr_task_'+ri) ? document.getElementById('pr_task_'+ri).value : '';
+      var rate = document.getElementById('pr_rate_'+ri) ? document.getElementById('pr_rate_'+ri).value : '';
+      var unit = document.getElementById('pr_unit_'+ri) ? document.getElementById('pr_unit_'+ri).value : '';
+      var custom = document.getElementById('pr_custom_'+ri) ? document.getElementById('pr_custom_'+ri).value : '';
+      var unitLabel = unit === 'Other' ? custom : unit;
+      if (task || rate) prRows.push(task + ' — $' + rate + ' per ' + (unitLabel || 'unit'));
+    }
+  }
+  data['Piece Rate Tasks'] = prRows.join(' | ');
+  data['Piece Rate Floor'] = gv('pr_min_rate');
+  data['Piece Rate Measurement'] = gv('pr_measurement');
+  data['Piece Rate Notes'] = gv('pr_notes');
   data['Pay Frequency'] = gv('rp_pay_freq');
   data['Guaranteed Hours/Week'] = gv('rp_hrs_pw');
   data['Award & Level'] = gv('rp_award');
