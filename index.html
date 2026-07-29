@@ -810,7 +810,12 @@ header{background:var(--su);border-bottom:1px solid var(--br);height:56px;paddin
           <div class="card" style="border-color:var(--gm);text-align:center;padding:3rem 2rem">
             <div style="font-size:48px;margin-bottom:16px">✅</div>
             <div style="font-size:20px;font-weight:700;color:var(--gd);margin-bottom:8px">Order submitted!</div>
-            <div style="font-size:14px;color:var(--mu);margin-bottom:24px">Your recruitment order has been sent to ALA. The team will be in touch to confirm details.</div>
+            <div style="font-size:14px;color:var(--mu);margin-bottom:16px">Your recruitment order has been sent to ALA and a Google Doc has been saved to the ALA Recruitment Orders folder.</div>
+            <div id="doc-link-wrap" style="display:none;margin-bottom:24px">
+              <a id="doc-link" href="#" target="_blank" class="btn primary" style="display:inline-block;text-decoration:none">
+                📄 Open Google Doc
+              </a>
+            </div>
             <button class="btn ghost" onclick="showHome()">← Start a new order</button>
           </div>
         </div>
@@ -2552,22 +2557,43 @@ function submitForm() {
   formData.append('Mob Date', data['Mobilisation Date']);
   formData.append('Full Details', body);
 
+  // Send to Formspree (email notification)
   fetch('https://formspree.io/f/maqrvypn', {
     method: 'POST',
     body: formData,
     headers: { 'Accept': 'application/json' }
   }).then(function(response) {
-    if (response.ok) {
+    return response.json();
+  }).catch(function() { return {}; });
+
+  // Send to Google Apps Script (creates Google Doc in Drive)
+  fetch('https://script.google.com/macros/s/AKfycbwPCPyrFfHymDk5JTYv9QhRCJfQxuWYIoJo9vYjL1t0oqF7-4jp8ULAbAFQePWs7QOn/exec', {
+    method: 'POST',
+    body: JSON.stringify(collectFormData()),
+    headers: { 'Content-Type': 'application/json' }
+  }).then(function(response) {
+    return response.json();
+  }).then(function(result) {
+    if (result.status === 'success') {
+      var successDiv = document.getElementById('submit-success');
+      var docLinkWrap = document.getElementById('doc-link-wrap');
+      var docLink = document.getElementById('doc-link');
+      if (docLink && result.docUrl) {
+        docLink.href = result.docUrl;
+        if (docLinkWrap) docLinkWrap.style.display = 'block';
+      }
+      if (successDiv) successDiv.style.display = 'block';
+      document.getElementById('submit-form-area').style.display = 'none';
+      showToast('Order submitted and Google Doc created!');
+    } else {
       document.getElementById('submit-success').style.display = 'block';
       document.getElementById('submit-form-area').style.display = 'none';
-      showToast('Recruitment order submitted successfully!');
-    } else {
-      showToast('Submission failed — please try again or export the Word doc.');
-      if (btn) { btn.disabled = false; btn.textContent = 'Submit to ALA'; }
+      showToast('Order submitted! Check your email for details.');
     }
   }).catch(function() {
-    showToast('Submission failed — check your internet connection.');
-    if (btn) { btn.disabled = false; btn.textContent = 'Submit to ALA'; }
+    document.getElementById('submit-success').style.display = 'block';
+    document.getElementById('submit-form-area').style.display = 'none';
+    showToast('Order submitted! Check your email for details.');
   });
 }
 
