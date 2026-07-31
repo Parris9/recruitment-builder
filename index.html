@@ -93,7 +93,7 @@
   .section-nav{display:flex;justify-content:space-between;align-items:center;padding:1.25rem 0;border-top:1px solid var(--br);margin-top:.5rem}
   .badge{display:inline-block;font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px}
   #toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--gd);color:#fff;padding:10px 20px;border-radius:8px;font-size:13px;font-weight:500;opacity:0;pointer-events:none;transition:opacity .25s;z-index:9999;white-space:nowrap}
-  #toast.show{opacity:1}
+  #toast.on{opacity:1}
   .builder-layout.no-sidebar{grid-template-columns:1fr}
   .builder-layout.no-sidebar .main-content{max-width:760px;margin:0 auto}
   @media(max-width:700px){.builder-layout{grid-template-columns:1fr}.sidebar{display:none}.main-content{padding:.75rem 1rem}#pg-home{padding:2rem 1rem 1.5rem}.fg,.fg.t,.fg.tw{flex-direction:column}.ck-grid{grid-template-columns:1fr}}
@@ -707,7 +707,7 @@
 
           <div class="card" style="border-color:var(--gm)">
             <div class="card-title">Submit or export</div>
-            <div class="info-box" style="margin-bottom:16px">Review the details above before submitting. Once submitted, the ALA PALM Compliance team will be in touch to confirm and progress the order.</div>
+            <div class="info-box" style="margin-bottom:16px">Review the details above before submitting.</div>
             <div style="display:flex;gap:12px;flex-wrap:wrap">
               <button class="btn primary" id="btn-submit-form" onclick="submitForm()" style="font-size:14px;padding:12px 24px">
                 ✉ Submit to ALA
@@ -735,11 +735,7 @@
                 📄 View order in Google Drive
               </a>
             </div>
-            <div style="padding:12px 20px;background:var(--gl);border-radius:8px;font-size:13px;color:var(--gd);display:inline-block;margin-bottom:20px">
-              A copy has been saved to the <strong>ALA Recruitment Orders</strong> folder in Google Drive.
-            </div>
-            <br>
-            <button class="btn ghost" onclick="showHome()" style="margin-top:8px">← Place another order</button>
+            <button class="btn ghost" onclick="resetAndGoHome()" style="margin-top:8px">← Place another order</button>
           </div>
         </div>
 
@@ -755,7 +751,12 @@
 
 <div id="toast"></div>
 
-<script>function updateContingencyPreview() {
+<script>function resetAndGoHome() {
+  // Simplest reliable way to fully clear all form state
+  window.location.reload();
+}
+
+function updateContingencyPreview() {
   var el = document.getElementById('cp_preview');
   if (!el) return;
   var ae = (document.getElementById('cp_ae')||{value:''}).value || '[AE Name]';
