@@ -165,9 +165,9 @@
             <div class="fld"><label>Entity <span class="req">*</span></label>
               <select id="g_entity">
                 <option value="">— select —</option>
-                <option>ALA — Agri Labour Australia</option>
-                <option>ALASS — ALA Staff Sourcing</option>
-                <option>H+p — Health Plus People</option>
+                <option>Agri Labour Australia</option>
+                <option>ALA Staff Sourcing</option>
+                <option>Health Plus People</option>
               </select>
             </div>
             <div class="fld"><label>AM placing this order <span class="req">*</span></label>
@@ -308,12 +308,17 @@
             </div>
           </div>
           <div class="fg tw">
+            <div class="fld"><label>Total workers (final number to be mobilised)</label>
+              <input type="text" id="rp_workers" readonly placeholder="Auto-calculated by adding up all Job orders">
+            </div>
+          </div>
+          <div class="fg tw">
             <div class="fld"><label>Estimated mobilisation date <span class="req">*</span></label>
               <input type="date" id="rp_start" onchange="checkDates()">
-              <div class="warn" id="warn-mob" style="display:none">Mobilisation date must be at least 2 months from today.</div>
             </div>
-            <div class="fld"><label>Contract end / return date</label>
+            <div class="fld" id="rp_end_wrap"><label>Contract end / return date <span class="req" id="rp_end_req">*</span></label>
               <input type="date" id="rp_end" onchange="checkDates()">
+              <div id="rp_end_pls_note" style="display:none;font-size:12px;color:var(--mu);margin-top:4px">Contract end date is calculated per job order from the Visa length set on each Job order / LMT card in General details.</div>
               <div class="warn" id="warn-ret" style="display:none">Return date must be at least 6 months from mobilisation date.</div>
             </div>
           </div>
@@ -336,7 +341,6 @@
           </div>
           <div class="fg tw">
             <div class="fld"><label>Rest &amp; meal breaks</label><input type="text" id="rp_breaks" placeholder="e.g. 30 min unpaid lunch"></div>
-            <div class="fld"><label>Leave entitlements</label><input type="text" id="rp_leave" placeholder="e.g. As per award / NES"></div>
           </div>
         </div>
         <div class="card">
@@ -705,6 +709,13 @@
             <div id="export-summary"></div>
           </div>
 
+          <div class="card">
+            <div class="card-title">Attach supporting documents (optional)</div>
+            <div class="info-box">Attach any supporting files — spreadsheets, arrival lists, referral details, PDFs, screenshots — any format. These will be sent with your order and saved to the ALA Recruitment Orders folder alongside your submission.</div>
+            <input type="file" id="supporting-files-input" multiple style="font-size:13px;margin-bottom:8px">
+            <div id="supporting-files-list" style="font-size:12px;color:var(--mu);margin-top:6px"></div>
+          </div>
+
           <div class="card" style="border-color:var(--gm)">
             <div class="card-title">Submit or export</div>
             <div class="info-box" style="margin-bottom:16px">Review the details above before submitting.</div>
@@ -751,7 +762,21 @@
 
 <div id="toast"></div>
 
-<script>function resetAndGoHome() {
+<script>function autofillContingency() {
+  var aeEl = document.getElementById('cp_ae');
+  var empEl = document.getElementById('cp_employer');
+  if (aeEl && !aeEl.value) {
+    var entity = gv('g_entity');
+    if (entity) aeEl.value = entity;
+  }
+  if (empEl && !empEl.value) {
+    var hostName = gv('h_name');
+    if (hostName) empEl.value = hostName;
+  }
+  updateContingencyPreview();
+}
+
+function resetAndGoHome() {
   // Simplest reliable way to fully clear all form state
   window.location.reload();
 }
@@ -1099,11 +1124,6 @@ document.querySelectorAll('.home-card[data-rtype]').forEach(function(card){
 (document.getElementById('btn-add-role')||{addEventListener:function(){}}).addEventListener('click', addRole);
 (document.getElementById('btn-add-site')||{addEventListener:function(){}}).addEventListener('click', addSite);
 
-// Event delegation for dynamically created buttons
-document.addEventListener('click', function(e) {
-  if (e.target && e.target.id === 'btn-add-role') addRole();
-  if (e.target && e.target.id === 'btn-add-site') addSite();
-});
 (document.getElementById('btn-add-accom')||{addEventListener:function(){}}).addEventListener('click', addAccom);
 (document.getElementById('btn-add-vehicle')||{addEventListener:function(){}}).addEventListener('click', addVehicle);
 (document.getElementById('btn-export')||{addEventListener:function(){}}).addEventListener('click', exportDoc);
@@ -1258,6 +1278,8 @@ function goTo(secId){
     item.classList.remove('active');
     if(item.getAttribute('data-sec')===secId) item.classList.add('active');
   });
+  if(secId==='s-rpdetails') setMobilisationDateMin();
+  if(secId==='s-contingency') autofillContingency();
   if(secId==='s-p2-main') renderPart2();
   if(secId==='s-export') buildExportSummary();
   updateCP();
@@ -1350,6 +1372,7 @@ function addRole(){
   row2.innerHTML = '<div class="fld"><label>Gender preference</label><select id="rl'+idx+'_gender"><option value="">No preference</option><option>Male preferred</option><option>Female preferred</option></select></div>';
   d.appendChild(row2);
 
+
   wrap.appendChild(d);
   renumberRoles();
   updateJobOrderOptions();
@@ -1419,6 +1442,33 @@ function addSite(){
   rm.addEventListener('click', function() { d.remove(); renumberSites(); });
   hdr.appendChild(rm);
   d.appendChild(hdr);
+
+  if (idx === 0) {
+    var quickFill = document.createElement('div');
+    quickFill.style.cssText = 'display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap';
+    var btnAddr = document.createElement('button');
+    btnAddr.type = 'button'; btnAddr.className = 'add-btn'; btnAddr.style.cssText = 'width:auto;padding:6px 12px;font-size:12px;margin-top:0';
+    btnAddr.textContent = 'Same as business address';
+    btnAddr.addEventListener('click', function() {
+      var addrEl = document.getElementById('st0_addr');
+      var businessAddr = gv('h_addr');
+      if (addrEl && businessAddr) addrEl.value = businessAddr;
+    });
+    var btnContact = document.createElement('button');
+    btnContact.type = 'button'; btnContact.className = 'add-btn'; btnContact.style.cssText = 'width:auto;padding:6px 12px;font-size:12px;margin-top:0';
+    btnContact.textContent = 'Same as host contact';
+    btnContact.addEventListener('click', function() {
+      var cEl = document.getElementById('st0_contact');
+      var pEl = document.getElementById('st0_phone');
+      var eEl = document.getElementById('st0_email');
+      if (cEl) cEl.value = gv('h_contact');
+      if (pEl) pEl.value = gv('h_phone');
+      if (eEl) eEl.value = gv('h_email');
+    });
+    quickFill.appendChild(btnAddr);
+    quickFill.appendChild(btnContact);
+    d.appendChild(quickFill);
+  }
 
   var row1 = document.createElement('div'); row1.className = 'fg';
   row1.innerHTML = '<div class="fld"><label>Site name <span class="req">*</span></label><input type="text" id="st'+idx+'_name" placeholder="e.g. Grassdale Feedlot"></div>' +
@@ -1578,8 +1628,9 @@ function checkDates(){
   var today=new Date();
   var mobEl=document.getElementById('rp_start');var retEl=document.getElementById('rp_end');
   var mobWarn=document.getElementById('warn-mob');var retWarn=document.getElementById('warn-ret');
+  setMobilisationDateMin();
   if(mobEl&&mobEl.value&&mobWarn){
-    var mob=new Date(mobEl.value+'T00:00:00');var min=new Date(today);min.setMonth(min.getMonth()+2);
+    var mob=new Date(mobEl.value+'T00:00:00');var min=new Date(today);min.setMonth(min.getMonth()+3);
     mobWarn.style.display=mob<min?'block':'none';
     // set min on return date = 6 months after mob date
     if(retEl && mobEl.value){
@@ -2015,6 +2066,105 @@ function initReturning() {
   addReturning();
 }
 
+var _uploadedReturningFile = null;
+
+function bulkAddReturning() {
+  var textarea = document.getElementById('bulk-returning-input');
+  if (!textarea || !textarea.value.trim()) { showToast('Paste a list first — one worker per line.'); return; }
+  var lines = textarea.value.split('\n').map(function(l){ return l.trim(); }).filter(function(l){ return l; });
+  var added = 0;
+  lines.forEach(function(line) {
+    var parts = line.split(/\t|,/).map(function(p){ return p.trim(); });
+    if (!parts[0]) return;
+    addReturning();
+    var idx = returningCount - 1;
+    var nameEl = document.getElementById('ret'+idx+'_name');
+    var bhEl = document.getElementById('ret'+idx+'_bhid');
+    var countryEl = document.getElementById('ret'+idx+'_country');
+    if (nameEl) nameEl.value = parts[0] || '';
+    if (bhEl && parts[1]) bhEl.value = parts[1];
+    if (countryEl && parts[2]) {
+      var opt = Array.from(countryEl.options).find(function(o){ return o.textContent.toLowerCase() === parts[2].toLowerCase(); });
+      if (opt) countryEl.value = opt.value;
+    }
+    added++;
+  });
+  textarea.value = '';
+  showToast(added + ' worker' + (added===1?'':'s') + ' added from list.');
+}
+
+function parseExcelReturning() {
+  var input = document.getElementById('returning-excel-input');
+  var status = document.getElementById('excel-file-status');
+  if (!input || !input.files || !input.files[0]) {
+    showToast('Choose an Excel file first.');
+    return;
+  }
+  var file = input.files[0];
+  _uploadedReturningFile = file;
+  if (status) status.textContent = 'Reading ' + file.name + '...';
+
+  function doParse() {
+    var reader = new FileReader();
+    reader.onload = function(e) {
+      try {
+        var data = new Uint8Array(e.target.result);
+        var workbook = XLSX.read(data, { type: 'array' });
+        var sheet = workbook.Sheets[workbook.SheetNames[0]];
+        var rows = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+        var added = 0;
+        rows.forEach(function(row, i) {
+          if (!row || !row[0]) return;
+          var first = String(row[0]).trim();
+          if (i === 0 && /name/i.test(first)) return;
+
+          var name = first;
+          var bhid = row[1] ? String(row[1]).trim() : '';
+          var country = row[2] ? String(row[2]).trim() : '';
+          var gender = row[3] ? String(row[3]).trim() : '';
+
+          addReturning();
+          var idx = returningCount - 1;
+          var nameEl = document.getElementById('ret'+idx+'_name');
+          var bhEl = document.getElementById('ret'+idx+'_bhid');
+          var countryEl = document.getElementById('ret'+idx+'_country');
+          var genderEl = document.getElementById('ret'+idx+'_gender');
+          if (nameEl) nameEl.value = name;
+          if (bhEl && bhid) bhEl.value = bhid;
+          if (countryEl && country) {
+            var opt = Array.from(countryEl.options).find(function(o){ return o.textContent.toLowerCase() === country.toLowerCase(); });
+            if (opt) countryEl.value = opt.value;
+          }
+          if (genderEl && gender) {
+            var gopt = Array.from(genderEl.options).find(function(o){ return o.textContent.toLowerCase() === gender.toLowerCase(); });
+            if (gopt) genderEl.value = gopt.value;
+          }
+          added++;
+        });
+
+        if (status) status.textContent = added + ' worker' + (added===1?'':'s') + ' loaded from ' + file.name + '. This file will be attached to your submission.';
+        showToast(added + ' worker' + (added===1?'':'s') + ' added from Excel.');
+      } catch (err) {
+        console.error(err);
+        if (status) status.textContent = 'Could not read the file — check it is a valid Excel/CSV file.';
+        showToast('Could not read the file.');
+      }
+    };
+    reader.readAsArrayBuffer(file);
+  }
+
+  if (typeof XLSX !== 'undefined') {
+    doParse();
+  } else {
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js';
+    s.onload = doParse;
+    s.onerror = function(){ showToast('Could not load Excel reader — check your internet connection.'); };
+    document.head.appendChild(s);
+  }
+}
+
 function addReturning() {
   var idx = returningCount++;
   var wrap = document.getElementById('returning-wrap');
@@ -2022,31 +2172,54 @@ function addReturning() {
   d.className = 'rep-blk';
   d.id = 'ret-' + idx;
   var rm = idx > 0 ? '<button class="rm-btn" data-idx="' + idx + '">Remove</button>' : '';
+
+  var jobOrderOptions = '<option value="">— not linked —</option>';
+  document.querySelectorAll('[id^="role-"]').forEach(function(b) {
+    var ridx = b.id.replace('role-','');
+    var jo = document.getElementById('rl'+ridx+'_jo');
+    var title = document.getElementById('rl'+ridx+'_title');
+    if (jo && jo.value) {
+      jobOrderOptions += '<option value="'+jo.value+'">'+jo.value+(title&&title.value?' — '+title.value:'')+'</option>';
+    }
+  });
+
+  var accomOptions = '<option value="">— use main accommodation —</option>';
+  document.querySelectorAll('[id^="accom-"]').forEach(function(b) {
+    var aidx = b.id.replace('accom-','');
+    var addr = document.getElementById('ac'+aidx+'_addr');
+    if (addr && addr.value) {
+      accomOptions += '<option value="'+addr.value.replace(/"/g,'')+'">'+addr.value+'</option>';
+    }
+  });
+  var mainAddr = document.getElementById('accom_address') ? document.getElementById('accom_address').value : (document.getElementById('accom_private_addr') ? document.getElementById('accom_private_addr').value : '');
+  if (mainAddr) {
+    accomOptions += '<option value="'+mainAddr.replace(/"/g,'')+'">'+mainAddr+' (main address)</option>';
+  }
+
   d.innerHTML =
     '<div class="rep-hdr"><span class="rep-hdr-title">Returning worker ' + (idx+1) + '</span>' + rm + '</div>' +
     '<div class="fg t">' +
-      '<div class="fld"><label>Full name <span class="req">*</span></label><input type="text" id="ret' + idx + '_name" placeholder="e.g. David Sabea" oninput="checkSeparateRP()"></div>' +
+      '<div class="fld"><label>Full name <span class="req">*</span></label><input type="text" id="ret' + idx + '_name" placeholder="e.g. David Sabea"></div>' +
       '<div class="fld"><label>Bullhorn ID / Worker ID</label><input type="text" id="ret' + idx + '_bhid" placeholder="e.g. 29336"></div>' +
       '<div class="fld"><label>Nationality / Country</label><select id="ret' + idx + '_country"><option value="">— select —</option><option>Fiji</option><option>Vanuatu</option><option>Samoa</option><option>Tonga</option><option>Papua New Guinea</option><option>Solomon Islands</option><option>Timor-Leste</option><option>Kiribati</option><option>Nauru</option><option>Tuvalu</option></select></div>' +
     '</div>' +
     '<div class="fg t">' +
-      '<div class="fld"><label>Previous RP number</label><input type="text" id="ret' + idx + '_prev_rp" placeholder="e.g. RP-2021-0042"></div>' +
-      '<div class="fld"><label>Previous employer</label><input type="text" id="ret' + idx + '_prev_employer" placeholder="e.g. DA Hall"></div>' +
-      '<div class="fld"><label>Previous placement end date</label><input type="date" id="ret' + idx + '_prev_end"></div>' +
+      '<div class="fld"><label>Gender</label><select id="ret' + idx + '_gender"><option value="">— select —</option><option>Male</option><option>Female</option></select></div>' +
+      '<div class="fld"><label>Link to job order</label><select id="ret' + idx + '_job_order">' + jobOrderOptions + '</select></div>' +
     '</div>' +
     '<div class="fg t">' +
-      '<div class="fld"><label>Return type</label><select id="ret' + idx + '_return_type" onchange="checkSeparateRP()"><option value="">— select —</option><option>Same role, same employer</option><option>Same role, different employer</option><option>Different role (same employer)</option><option>Different role (different employer)</option></select></div>' +
-      '<div class="fld"><label>Visa status</label><select id="ret' + idx + '_visa"><option value="">— select —</option><option>New visa required</option><option>Existing multi-year visa (still valid)</option><option>Extension required</option></select></div>' +
+      '<div class="fld"><label>Link to accommodation address</label><select id="ret' + idx + '_accom">' + accomOptions + '</select></div>' +
+    '</div>' +
+    '<div class="fg tw">' +
+      '<div class="fld"><label>Contract start date (if different)</label><input type="date" id="ret' + idx + '_start"></div>' +
+      '<div class="fld"><label>Contract end date (if different)</label><input type="date" id="ret' + idx + '_end"></div>' +
     '</div>' +
     '<div class="fg t">' +
-      '<div class="fld"><label>Role for this placement</label><input type="text" id="ret' + idx + '_role" placeholder="e.g. Egg Transporter / Farm Transporter" oninput="checkSeparateRP()"></div>' +
-      '<div class="fld"><label>Pay rate for this worker ($/hr)</label><input type="text" id="ret' + idx + '_pay" placeholder="e.g. $28.00 — if different to group rate" oninput="checkSeparateRP()"></div>' +
-    '</div>' +
-    '<div id="ret' + idx + '_sep-warn" style="display:none;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;padding:10px 14px;font-size:13px;color:#92400E;margin-top:8px">' +
-      '<strong>Separate RP likely needed</strong> — This worker has a different role or pay rate. Confirm with your team before submitting.' +
+      '<div class="fld"><label>Role for this placement</label><input type="text" id="ret' + idx + '_role" placeholder="e.g. Egg Transporter / Farm Transporter"></div>' +
+      '<div class="fld"><label>Pay rate for this worker ($/hr)</label><input type="text" id="ret' + idx + '_pay" placeholder="e.g. $28.00 — if different to group rate"></div>' +
     '</div>' +
     '<div class="fg f">' +
-      '<div class="fld"><label>Notes</label><textarea id="ret' + idx + '_notes" placeholder="e.g. Special hourly rate approved by Liam. PLS visa extension being processed."></textarea></div>' +
+      '<div class="fld"><label>Notes</label><textarea id="ret' + idx + '_notes" placeholder="e.g. Special hourly rate approved by Liam."></textarea></div>' +
     '</div>';
 
   wrap.appendChild(d);
@@ -2055,14 +2228,11 @@ function addReturning() {
   if (rmBtn) {
     rmBtn.addEventListener('click', function() {
       document.getElementById('ret-' + this.getAttribute('data-idx')).remove();
-      checkSeparateRP();
     });
   }
-  d.querySelectorAll('input,select,textarea').forEach(function(el) {
-    el.addEventListener('input', checkSeparateRP);
-    el.addEventListener('change', checkSeparateRP);
-  });
 }
+
+
 
 function checkSeparateRP() {
   var mainRoles = getRolesSummary().toLowerCase();
@@ -2153,6 +2323,14 @@ function renderStandard(container) {
   html += '<option>No experience required</option><option>1 year relevant experience</option>';
   html += '<option>2+ years relevant experience</option><option>Trade qualified</option></select></div>';
   html += '</div>';
+  html += '<div class="fg tw">';
+  html += '<div class="fld"><label>Gender preference</label><select id="wc_gender"><option value="">No preference</option>';
+  html += '<option>Male preferred</option><option>Female preferred</option><option>Male only</option><option>Female only</option></select></div>';
+  html += '<div class="fld"><label>Weekend availability required?</label><select id="wc_weekend"><option value="">- select -</option>';
+  html += '<option>Yes - must be available weekends</option>';
+  html += '<option>No - weekends not required</option>';
+  html += '<option>Flexible - prefer but not essential</option></select></div>';
+  html += '</div>';
   html += '<div class="fg f"><div class="fld"><label>English language requirement</label>';
   html += '<select id="wc_eng"><option value="">- select -</option>';
   html += '<option>Not required</option><option>Basic - able to follow instructions</option>';
@@ -2184,6 +2362,18 @@ function renderStandard(container) {
   html += '<div id="returning-workers-section" style="display:none;margin-top:12px">';
   html += '<div class="card-title" style="margin-top:8px;font-size:12px">Returning worker details</div>';
   html += '<div class="info-box">Add each worker you want to bring back. This helps ALA identify the right candidate in Bullhorn.</div>';
+  html += '<div style="background:var(--s2);border:1px solid var(--br);border-radius:8px;padding:12px;margin-bottom:12px">';
+  html += '<label style="font-size:12px;font-weight:600;color:#374151;margin-bottom:6px;display:block">Have a spreadsheet? Upload an Excel file to auto-fill worker cards</label>';
+  html += '<div class="info-box" style="margin-bottom:8px">Columns expected (any order): Name, BH ID, Country, Gender. First row can be a header — it will be skipped automatically.</div>';
+  html += '<input type="file" id="returning-excel-input" accept=".xlsx,.xls,.csv" style="font-size:13px;margin-bottom:8px">';
+  html += '<button class="add-btn" type="button" onclick="parseExcelReturning()" style="margin-top:0">+ Add workers from Excel</button>';
+  html += '<div id="excel-file-status" style="font-size:12px;color:var(--mu);margin-top:6px"></div>';
+  html += '</div>';
+  html += '<div style="background:var(--s2);border:1px solid var(--br);border-radius:8px;padding:12px;margin-bottom:12px">';
+  html += '<label style="font-size:12px;font-weight:600;color:#374151;margin-bottom:6px;display:block">Or paste a list here to add multiple workers at once</label>';
+  html += '<textarea id="bulk-returning-input" rows="4" placeholder="One worker per line, e.g.:&#10;David Sabea, 29336, Fiji&#10;Mele Tuilagi, 30112, Fiji&#10;Josua Rokotuiviwa, 31205, Tonga" style="font-size:13px"></textarea>';
+  html += '<button class="add-btn" type="button" onclick="bulkAddReturning()" style="margin-top:8px">+ Add workers from list</button>';
+  html += '</div>';
   html += '<div id="returning-wrap"></div>';
   html += '<button class="add-btn" id="btn-add-returning" type="button">+ Add another returning worker</button>';
   html += '</div></div>';
@@ -2245,10 +2435,25 @@ function toggleWorkerSource() {
   var val = gv('r_worker_source');
   var newSec = document.getElementById('new-workers-section');
   var retSec = document.getElementById('returning-workers-section');
+  var title = document.getElementById('named-workers-title');
+  var info = document.getElementById('named-workers-info');
+
   if (newSec) newSec.style.display = (val === 'new' || val === 'mixed') ? 'block' : 'none';
+
+  // Named worker cards (with individual dates, job order/accommodation links) are useful
+  // regardless of source — e.g. referrals or already-identified new workers who arrive
+  // on different dates, not just workers returning from a previous placement.
   if (retSec) {
-    retSec.style.display = (val === 'returning' || val === 'mixed') ? 'block' : 'none';
-    if ((val === 'returning' || val === 'mixed') && document.getElementById('returning-wrap') && document.getElementById('returning-wrap').children.length === 0) {
+    retSec.style.display = val ? 'block' : 'none';
+    if (title) {
+      title.textContent = val === 'new' ? 'Named workers (optional)' : 'Returning worker details';
+    }
+    if (info) {
+      info.textContent = val === 'new'
+        ? 'If you already know specific workers (e.g. referrals), add them here — including their own mobilisation and return dates if these differ from the group.'
+        : 'Add each worker you want to bring back. This helps ALA identify the right candidate in Bullhorn.';
+    }
+    if (val && document.getElementById('returning-wrap') && document.getElementById('returning-wrap').children.length === 0) {
       addReturning();
     }
   }
@@ -2580,10 +2785,35 @@ function handlePayType() {
   }
 }
 
+function setMobilisationDateMin(){
+  var mobEl=document.getElementById('rp_start');
+  if(!mobEl) return;
+  var min=new Date();min.setMonth(min.getMonth()+3);
+  mobEl.min=min.toISOString().split('T')[0];
+}
+
 function updateVisaOptions() {
   var prog = gv('rp_prog');
   var country = gv('rp_country');
   updatePieceRateVisibility();
+
+  // Contract end / return date: only relevant for SWP; PLS calculates per job order
+  var endWrap = document.getElementById('rp_end_wrap');
+  var endInput = document.getElementById('rp_end');
+  var endNote = document.getElementById('rp_end_pls_note');
+  var endReq = document.getElementById('rp_end_req');
+  if (endWrap) {
+    if (prog === 'PLS') {
+      if (endInput) endInput.style.display = 'none';
+      if (endNote) endNote.style.display = 'block';
+      if (endReq) endReq.style.display = 'none';
+    } else {
+      if (endInput) endInput.style.display = '';
+      if (endNote) endNote.style.display = 'none';
+      if (endReq) endReq.style.display = '';
+    }
+  }
+
   var sel = document.getElementById('rp_visa');
   var note = document.getElementById('visa-note');
   if (!sel) return;
@@ -2846,6 +3076,7 @@ function collectFormData() {
     if (title || jo) roles.push((jo?'['+jo+'] ':'')+title+(gv('rl'+idx+'_count')?' x'+gv('rl'+idx+'_count'):'')+(gv('rl'+idx+'_site')?' @ '+gv('rl'+idx+'_site'):''));
   });
   data['Job Orders'] = roles.join(' | ') || '-';
+  data['Total Workers'] = gv('rp_workers');
 
   // Host employer
   data['Client Type'] = gv('h_ctype');
@@ -2918,6 +3149,12 @@ function collectFormData() {
   });
   data['Existing Vehicle Regos'] = regos.join(', ') || '-';
 
+  // Contingency plan
+  data['AE Name'] = gv('cp_ae');
+  data['CP Employer'] = gv('cp_employer');
+  data['CP States'] = gv('cp_states');
+  data['Contingency Plan'] = document.getElementById('cp_preview') ? document.getElementById('cp_preview').textContent : '';
+
   // Cultural competency
   data['Cultural Competency Contact'] = gv('cc_name') + (gv('cc_pos') ? ' — ' + gv('cc_pos') : '');
   data['CC Phone'] = gv('cc_phone');
@@ -2929,6 +3166,8 @@ function collectFormData() {
   data['Worker Source'] = gv('r_worker_source');
   data['Interview Format'] = gv('i_format');
   data['Employer Involvement'] = gv('i_emp_inv');
+  data['Preferred Gender'] = gv('wc_gender');
+  data['Weekend Availability Required'] = gv('wc_weekend');
   data['Special Requests (Before)'] = gv('sr_before');
   data['Special Requests (After)'] = gv('sr_after');
 
@@ -2937,7 +3176,7 @@ function collectFormData() {
   document.querySelectorAll('[id^="ret-"]').forEach(function(b) {
     var idx = b.id.replace('ret-','');
     var name = gv('ret'+idx+'_name');
-    if (name) returning.push(name + (gv('ret'+idx+'_bhid') ? ' (BH: '+gv('ret'+idx+'_bhid')+')' : '') + (gv('ret'+idx+'_country') ? ' — '+gv('ret'+idx+'_country') : ''));
+    if (name) returning.push(name + (gv('ret'+idx+'_bhid') ? ' (BH: '+gv('ret'+idx+'_bhid')+')' : '') + (gv('ret'+idx+'_country') ? ' — '+gv('ret'+idx+'_country') : '') + (gv('ret'+idx+'_gender') ? ' — '+gv('ret'+idx+'_gender') : '') + (gv('ret'+idx+'_job_order') ? ' → '+gv('ret'+idx+'_job_order') : '') + (gv('ret'+idx+'_accom') ? ' | Accom: '+gv('ret'+idx+'_accom') : '') + (gv('ret'+idx+'_start') ? ' | Start: '+gv('ret'+idx+'_start') : '') + (gv('ret'+idx+'_end') ? ' | End: '+gv('ret'+idx+'_end') : ''));
   });
   data['Returning Workers'] = returning.join(' | ') || '-';
 
@@ -2978,11 +3217,17 @@ function submitForm() {
   var data = collectFormData();
   var body = buildEmailBody(data);
 
-  // Validate minimum required fields
   if (!data['Employer Name'] || !data['Account Manager']) {
     showToast('Please fill in at least the employer name and AM name before submitting.');
     if (btn) { btn.disabled = false; btn.textContent = 'Submit to ALA'; }
     return;
+  }
+
+  var allFiles = [];
+  if (_uploadedReturningFile) allFiles.push(_uploadedReturningFile);
+  var supportingInput = document.getElementById('supporting-files-input');
+  if (supportingInput && supportingInput.files) {
+    Array.from(supportingInput.files).forEach(function(f){ allFiles.push(f); });
   }
 
   var formData = new FormData();
@@ -2997,7 +3242,10 @@ function submitForm() {
   formData.append('Mob Date', data['Mobilisation Date']);
   formData.append('Full Details', body);
 
-  // Send to Formspree (email notification)
+  allFiles.forEach(function(f, i) {
+    formData.append('Attachment ' + (i + 1), f, f.name);
+  });
+
   fetch('https://formspree.io/f/maqrvypn', {
     method: 'POST',
     body: formData,
@@ -3006,25 +3254,43 @@ function submitForm() {
     return response.json();
   }).catch(function() { return {}; });
 
-  // Send to Google Apps Script via FormData (avoids CORS issues)
-  var scriptUrl = 'https://script.google.com/macros/s/AKfycbwPCPyrFfHymDk5JTYv9QhRCJfQxuWYIoJo9vYjL1t0oqF7-4jp8ULAbAFQePWs7QOn/exec';
-  var gasData = new FormData();
-  var formObj = collectFormData();
-  Object.keys(formObj).forEach(function(k){ gasData.append(k, formObj[k] || ''); });
-
-  fetch(scriptUrl, {
-    method: 'POST',
-    body: gasData,
-    mode: 'no-cors'
-  }).then(function() {
+  function finishSubmit() {
     document.getElementById('submit-success').style.display = 'block';
     document.getElementById('submit-form-area').style.display = 'none';
     showToast('Order submitted! Google Doc saved to ALA Recruitment Orders.');
-  }).catch(function() {
-    document.getElementById('submit-success').style.display = 'block';
-    document.getElementById('submit-form-area').style.display = 'none';
-    showToast('Order submitted! Check your email for details.');
-  });
+  }
+
+  function sendToAppsScript(fileNames, fileB64List) {
+    var scriptUrl = 'https://script.google.com/macros/s/AKfycbwPCPyrFfHymDk5JTYv9QhRCJfQxuWYIoJo9vYjL1t0oqF7-4jp8ULAbAFQePWs7QOn/exec';
+    var gasData = new FormData();
+    var formObj = collectFormData();
+    Object.keys(formObj).forEach(function(k){ gasData.append(k, formObj[k] || ''); });
+    if (fileNames && fileNames.length) {
+      gasData.append('AttachmentFileNames', JSON.stringify(fileNames));
+      gasData.append('AttachmentFileData', JSON.stringify(fileB64List));
+    }
+    fetch(scriptUrl, { method: 'POST', body: gasData, mode: 'no-cors' })
+      .then(finishSubmit)
+      .catch(finishSubmit);
+  }
+
+  if (allFiles.length === 0) {
+    sendToAppsScript([], []);
+  } else {
+    var readers = allFiles.map(function(f) {
+      return new Promise(function(resolve) {
+        var reader = new FileReader();
+        reader.onload = function(e) { resolve(e.target.result.split(',')[1]); };
+        reader.onerror = function() { resolve(''); };
+        reader.readAsDataURL(f);
+      });
+    });
+    Promise.all(readers).then(function(base64List) {
+      sendToAppsScript(allFiles.map(function(f){ return f.name; }), base64List);
+    }).catch(function() {
+      sendToAppsScript([], []);
+    });
+  }
 }
 
 /* -- WIRE UP EVENTS -- */
@@ -3044,14 +3310,7 @@ document.querySelectorAll('.home-card[data-rtype]').forEach(function(card){
   });
 });
 (document.getElementById('btn-home')||{addEventListener:function(){}}).addEventListener('click', showHome);
-(document.getElementById('btn-add-role')||{addEventListener:function(){}}).addEventListener('click', addRole);
-(document.getElementById('btn-add-site')||{addEventListener:function(){}}).addEventListener('click', addSite);
 
-// Event delegation for dynamically created buttons
-document.addEventListener('click', function(e) {
-  if (e.target && e.target.id === 'btn-add-role') addRole();
-  if (e.target && e.target.id === 'btn-add-site') addSite();
-});
 (document.getElementById('btn-add-accom')||{addEventListener:function(){}}).addEventListener('click', addAccom);
 (document.getElementById('btn-add-vehicle')||{addEventListener:function(){}}).addEventListener('click', addVehicle);
 (document.getElementById('btn-export')||{addEventListener:function(){}}).addEventListener('click', exportDoc);
