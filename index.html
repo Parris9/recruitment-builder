@@ -185,7 +185,7 @@
         </div>
         <div class="section-nav">
           <button class="btn ghost" id="btn-home">← Home</button>
-          <button class="btn primary" onclick="goTo('s-host')">Next: Host employer →</button>
+          <button class="btn primary" onclick="validateAndGoTo('s-host')">Next: Host employer →</button>
         </div>
       </div>
 
@@ -275,7 +275,7 @@
           </div>
         <div class="section-nav">
           <button class="btn ghost" onclick="goTo('s-general')">← Back</button>
-          <button class="btn primary" onclick="goTo('s-rpdetails')">Next: RP details →</button>
+          <button class="btn primary" onclick="validateAndGoTo('s-rpdetails')">Next: RP details →</button>
         </div>
       </div>
       </div>
@@ -295,7 +295,7 @@
                 <option>Any / Open</option>
               </select>
             </div>
-            <div class="fld"><label>Programme</label>
+            <div class="fld"><label>Programme <span class="req">*</span></label>
               <select id="rp_prog" onchange="updateVisaOptions()">
                 <option value="">— select —</option>
                 <option>SWP</option><option>PLS</option>
@@ -331,16 +331,16 @@
             </div>
           </div>
           <div class="fg f">
-            <div class="fld"><label>Conditions of work</label>
+            <div class="fld"><label>Conditions of work <span class="req">*</span></label>
               <textarea id="rp_conditions" placeholder="e.g. Hot, cold, dusty, lifting 20kg boxes, outdoor work..."></textarea>
             </div>
           </div>
           <div class="fg tw">
-            <div class="fld"><label>Working days</label><input type="text" id="rp_days" placeholder="e.g. Monday – Friday"></div>
-            <div class="fld"><label>Hours of work</label><input type="text" id="rp_hours" placeholder="e.g. 6:00am – 2:00pm"></div>
+            <div class="fld"><label>Working days <span class="req">*</span></label><input type="text" id="rp_days" placeholder="e.g. Monday – Friday"></div>
+            <div class="fld"><label>Hours of work <span class="req">*</span></label><input type="text" id="rp_hours" placeholder="e.g. 6:00am – 2:00pm"></div>
           </div>
           <div class="fg tw">
-            <div class="fld"><label>Rest &amp; meal breaks</label><input type="text" id="rp_breaks" placeholder="e.g. 30 min unpaid lunch"></div>
+            <div class="fld"><label>Rest &amp; meal breaks <span class="req">*</span></label><input type="text" id="rp_breaks" placeholder="e.g. 30 min unpaid lunch"></div>
           </div>
         </div>
         <div class="card">
@@ -354,7 +354,7 @@
                 <option value="mixed">Hourly + piece rate (mixed)</option>
               </select>
             </div>
-            <div class="fld"><label>Award &amp; level</label><input type="text" id="rp_award" placeholder="e.g. Horticulture Award — Level 1"></div>
+            <div class="fld"><label>Award &amp; level <span class="req">*</span></label><input type="text" id="rp_award" placeholder="e.g. Horticulture Award — Level 1"></div>
           </div>
           <div class="fg t">
             <div class="fld"><label>Pay frequency <span class="req">*</span></label>
@@ -363,7 +363,7 @@
                 <option>Weekly</option><option>Fortnightly</option><option>Four-weekly</option>
               </select>
             </div>
-            <div class="fld"><label>Guaranteed hours/week (min)</label><input type="number" id="rp_hrs_pw" placeholder="e.g. 38"></div>
+            <div class="fld"><label>Guaranteed hours/week (min) <span class="req">*</span></label><input type="number" id="rp_hrs_pw" placeholder="e.g. 38"></div>
           </div>
           <div id="pay-hourly-section" style="display:none">
             <div style="height:1px;background:var(--br);margin:12px 0"></div>
@@ -390,10 +390,10 @@
             </div>
             <button class="add-btn" id="btn-add-pr-row" type="button" onclick="addPrRow()" style="margin-bottom:12px">+ Add task / activity</button>
             <div class="fg tw">
-              <div class="fld"><label>Minimum guaranteed floor rate</label>
+              <div class="fld"><label>Minimum guaranteed floor rate <span class="req">*</span></label>
                 <input type="text" id="pr_min_rate" placeholder="e.g. $24.50/hr">
               </div>
-              <div class="fld"><label>How is output measured?</label>
+              <div class="fld"><label>How is output measured? <span class="req">*</span></label>
                 <input type="text" id="pr_measurement" placeholder="e.g. Supervisor counts bins daily">
               </div>
             </div>
@@ -406,7 +406,7 @@
         </div>
         <div class="section-nav">
           <button class="btn ghost" onclick="goTo('s-host')">← Back</button>
-          <button class="btn primary" onclick="goTo('s-sites')">Next: Work sites →</button>
+          <button class="btn primary" onclick="validateAndGoTo('s-sites')">Next: Work sites →</button>
         </div>
       </div>
 
@@ -419,7 +419,7 @@
         </div>
         <div class="section-nav">
           <button class="btn ghost" onclick="goTo('s-rpdetails')">← Back</button>
-          <button class="btn primary" onclick="goTo('s-accom')">Next: Accommodation →</button>
+          <button class="btn primary" onclick="validateAndGoTo('s-accom')">Next: Accommodation →</button>
         </div>
       </div>
 
@@ -562,7 +562,7 @@
 
         <div class="section-nav">
           <button class="btn ghost" onclick="goTo('s-sites')">← Back</button>
-          <button class="btn primary" onclick="goTo('s-transport')">Next: Transport →</button>
+          <button class="btn primary" onclick="validateAndGoTo('s-transport')">Next: Transport →</button>
         </div>
 
       </div>
@@ -580,7 +580,7 @@
                 <option value="Private">Private</option>
               </select>
             </div>
-            <div class="fld"><label>Vehicle status</label>
+            <div class="fld"><label>Vehicle status <span class="req">*</span></label>
               <select id="transport_vehicle_status" onchange="handleTransportVehicleStatus()">
                 <option value="">— select —</option>
                 <option value="existing">Using existing / current vehicle</option>
@@ -611,12 +611,12 @@
             <div class="card-title">Private transport arrangement</div>
             <div class="info-box">Workers are using private transport. Please explain how workers will get to work and run personal errands.</div>
             <div class="fg f">
-              <div class="fld"><label>How will workers travel to and from work?</label>
+              <div class="fld"><label>How will workers travel to and from work? <span class="req">*</span></label>
                 <textarea id="t_private_work" placeholder="e.g. Workers will carpool / walk (site is 500m from accommodation) / use public transport..."></textarea>
               </div>
             </div>
             <div class="fg f">
-              <div class="fld"><label>How will workers do grocery shopping and errands?</label>
+              <div class="fld"><label>How will workers do grocery shopping and errands? <span class="req">*</span></label>
                 <textarea id="t_private_grocery" placeholder="e.g. Employer drops workers to town on weekends / nearest supermarket is 2km away..."></textarea>
               </div>
             </div>
@@ -627,7 +627,7 @@
 
         <div class="section-nav">
           <button class="btn ghost" onclick="goTo('s-accom')">← Back</button>
-          <button class="btn primary" onclick="goTo('s-contingency')">Next: Contingency plan →</button>
+          <button class="btn primary" onclick="validateAndGoTo('s-contingency')">Next: Contingency plan →</button>
         </div>
 
       </div>
@@ -664,7 +664,7 @@
         </div>
         <div class="section-nav">
           <button class="btn ghost" onclick="goTo('s-transport')">← Back</button>
-          <button class="btn primary" onclick="goTo('s-cultural')">Next: Cultural competency →</button>
+          <button class="btn primary" onclick="validateAndGoTo('s-cultural')">Next: Cultural competency →</button>
         </div>
       </div>
 
@@ -676,22 +676,22 @@
             <div class="fld"><label>Full name <span class="req">*</span></label>
               <input type="text" id="cc_name" placeholder="Full name">
             </div>
-            <div class="fld"><label>Position / title</label>
+            <div class="fld"><label>Position / title <span class="req">*</span></label>
               <input type="text" id="cc_pos" placeholder="e.g. Welfare Officer">
             </div>
           </div>
           <div class="fg tw">
-            <div class="fld"><label>Phone</label>
+            <div class="fld"><label>Phone <span class="req">*</span></label>
               <input type="tel" id="cc_phone" placeholder="04xx xxx xxx">
             </div>
-            <div class="fld"><label>Email</label>
+            <div class="fld"><label>Email <span class="req">*</span></label>
               <input type="email" id="cc_email" placeholder="name@company.com.au">
             </div>
           </div>
         </div>
         <div class="section-nav">
           <button class="btn ghost" onclick="goTo('s-contingency')">← Back</button>
-          <button class="btn primary" onclick="goTo('s-p2-main')">Next: Recruitment details →</button>
+          <button class="btn primary" onclick="validateAndGoTo('s-p2-main')">Next: Recruitment details →</button>
         </div>
       </div>
 
@@ -762,7 +762,54 @@
 
 <div id="toast"></div>
 
-<script>function autofillContingency() {
+<script>function validateAndGoTo(nextId) {
+  var current = document.querySelector('.section-panel.active');
+  if (!current || current.id === 's-contingency') {
+    goTo(nextId);
+    return;
+  }
+
+  var reqSpans = current.querySelectorAll('.req');
+  var firstInvalid = null;
+
+  for (var i = 0; i < reqSpans.length; i++) {
+    var fld = reqSpans[i].closest('.fld');
+    if (!fld) continue;
+    var input = fld.querySelector('input, select, textarea');
+    if (!input) continue;
+
+    // Skip fields that are hidden (display:none on themselves or an ancestor)
+    if (input.offsetParent === null) continue;
+
+    var isEmpty = false;
+    if (input.type === 'checkbox' || input.type === 'radio') {
+      // group checkbox: at least one in the group with same name must be checked
+      isEmpty = false; // checklist-style groups aren't blocking
+    } else {
+      isEmpty = !input.value || !input.value.trim();
+    }
+
+    if (isEmpty) {
+      input.style.borderColor = '#EF4444';
+      input.style.boxShadow = '0 0 0 3px rgba(239,68,68,.12)';
+      if (!firstInvalid) firstInvalid = input;
+    } else {
+      input.style.borderColor = '';
+      input.style.boxShadow = '';
+    }
+  }
+
+  if (firstInvalid) {
+    firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    firstInvalid.focus();
+    showToast('Please fill in all required fields (marked with *) before continuing.');
+    return;
+  }
+
+  goTo(nextId);
+}
+
+function autofillContingency() {
   var aeEl = document.getElementById('cp_ae');
   var empEl = document.getElementById('cp_employer');
   if (aeEl && !aeEl.value) {
@@ -1661,192 +1708,196 @@ function updateCP(){
 /* -- EXPORT SUMMARY -- */
 function buildExportSummary(){
   updateCP();
-  var sites=[];document.querySelectorAll('[id^="site-"]').forEach(function(b){var idx=b.id.replace('site-','');var n=gv('st'+idx+'_name');if(n)sites.push(n);});
-  var accoms=[];document.querySelectorAll('[id^="accom-"]').forEach(function(b){var idx=b.id.replace('accom-','');var a=gv('ac'+idx+'_addr');if(a)accoms.push(a);});
-  var vehicles=[];document.querySelectorAll('[id^="vehicle-"]').forEach(function(b){var idx=b.id.replace('vehicle-','');var v=gv('vh'+idx+'_make');if(v)vehicles.push(v+' ('+gv('vh'+idx+'_seats')+' seats)');});
-  var rtype=document.querySelector('input[name="rtype"]:checked');
-  var accomYN=document.querySelector('input[name="accom_yn"]:checked');
-  var transYN=document.querySelector('input[name="trans_yn"]:checked');
+  var data = collectFormData();
+  function fdd(v){ return v ? fd(v) : '-'; }
   document.getElementById('export-summary').innerHTML=
-    '<div class="card-title">Order summary</div>'+
-    '<div class="fg tw"><div class="fld"><label>Entity</label><div style="font-size:14px;font-weight:500">'+( gv('g_entity')||'-')+'</div></div>'+
-    '<div class="fld"><label>AM</label><div style="font-size:14px;font-weight:500">'+(gv('g_am')||'-')+'</div></div></div>'+
-    '<div class="fg tw"><div class="fld"><label>Recruitment type</label><div style="font-size:14px;font-weight:500">'+(rtype?rtype.value:'-')+'</div></div>'+
-    '<div class="fld"><label>Employer</label><div style="font-size:14px;font-weight:500">'+(gv('h_name')||'-')+'</div></div></div>'+
-    '<div class="fg tw"><div class="fld"><label>Roles &amp; workers</label><div style="font-size:14px;font-weight:500">'+(getRolesSummary()||'-')+'</div></div>'+
-    '<div class="fld"><label>Country / Visa</label><div style="font-size:14px;font-weight:500">'+(gv('rp_country')||'-')+' / '+(gv('rp_visa')||'-')+'</div></div></div>'+
-    '<div class="fg tw"><div class="fld"><label>Mobilisation date</label><div style="font-size:14px;font-weight:500">'+fd(gv('rp_start'))+'</div></div>'+
-    '<div class="fld"><label>Return date</label><div style="font-size:14px;font-weight:500">'+fd(gv('rp_end'))+'</div></div></div>'+
-    '<div class="fg tw"><div class="fld"><label>Work sites</label><div style="font-size:14px;font-weight:500">'+(sites.join(', ')||'-')+'</div></div>'+
-    '<div class="fld"><label>Accommodation</label><div style="font-size:14px;font-weight:500">'+(accomYN?accomYN.value.toUpperCase():'-')+(accoms.length?' - '+accoms.join(', '):'')+'</div></div></div>'+
-    '<div class="fg tw"><div class="fld"><label>Transport</label><div style="font-size:14px;font-weight:500">'+(transYN?transYN.value.toUpperCase():'-')+(vehicles.length?' - '+vehicles.join(', '):'')+'</div></div>'+
-    '<div class="fld"><label>Cultural competency</label><div style="font-size:14px;font-weight:500">'+(gv('cc_name')||'-')+'</div></div></div>';
+    '<div class="fg tw"><div class="fld"><label>Entity</label><div style="font-size:14px;font-weight:500">'+(data['Entity']||'-')+'</div></div>'+
+    '<div class="fld"><label>Account Manager</label><div style="font-size:14px;font-weight:500">'+(data['Account Manager']||'-')+'</div></div></div>'+
+    '<div class="fg tw"><div class="fld"><label>Employer</label><div style="font-size:14px;font-weight:500">'+(data['Employer Name']||'-')+'</div></div>'+
+    '<div class="fld"><label>Job Orders</label><div style="font-size:14px;font-weight:500">'+(data['Job Orders']||'-')+'</div></div></div>'+
+    '<div class="fg tw"><div class="fld"><label>Total Workers</label><div style="font-size:14px;font-weight:500">'+(data['Total Workers']||'-')+'</div></div>'+
+    '<div class="fld"><label>Country / Visa</label><div style="font-size:14px;font-weight:500">'+(data['Sending Country']||'-')+' / '+(data['Visa Length']||'-')+'</div></div></div>'+
+    '<div class="fg tw"><div class="fld"><label>Mobilisation date</label><div style="font-size:14px;font-weight:500">'+fdd(data['Mobilisation Date'])+'</div></div>'+
+    '<div class="fld"><label>Contract end date</label><div style="font-size:14px;font-weight:500">'+fdd(data['Contract End Date'])+'</div></div></div>'+
+    '<div class="fg tw"><div class="fld"><label>Work sites</label><div style="font-size:14px;font-weight:500">'+(data['Work Sites']||'-')+'</div></div>'+
+    '<div class="fld"><label>Accommodation</label><div style="font-size:14px;font-weight:500">'+(data['Accommodation Provider']?data['Accommodation Provider']+' — '+(data['Accommodation Address']||''):'-')+'</div></div></div>'+
+    '<div class="fg tw"><div class="fld"><label>Transport</label><div style="font-size:14px;font-weight:500">'+(data['Transport Provider']||'-')+'</div></div>'+
+    '<div class="fld"><label>Cultural competency</label><div style="font-size:14px;font-weight:500">'+(data['Cultural Competency Contact']||'-')+'</div></div></div>';
 }
 
 /* -- EXPORT DOC -- */
 function exportDoc(){
   showToast('Preparing export...');
-  function runExport(){
-    var D=docx;
-    var today=new Date().toLocaleDateString('en-AU',{day:'2-digit',month:'long',year:'numeric'});
-    var CB={style:D.BorderStyle.SINGLE,size:1,color:'D1D5DB'};
-    var BG={top:CB,bottom:CB,left:CB,right:CB};
-    var CB2={style:D.BorderStyle.SINGLE,size:1,color:'B5D4F4'};
-    var BB={top:CB2,bottom:CB2,left:CB2,right:CB2};
-    function hC(t,w,col){return new D.TableCell({width:{size:w,type:D.WidthType.DXA},shading:{fill:col||'1D9E75',type:D.ShadingType.CLEAR},borders:BG,margins:{top:80,bottom:80,left:120,right:120},children:[new D.Paragraph({children:[new D.TextRun({text:t,bold:true,color:'FFFFFF',size:22,font:'Arial'})]})]});}
-    function lC(t,w,sh,brd){return new D.TableCell({width:{size:w||2340,type:D.WidthType.DXA},shading:{fill:sh||'F3F4F6',type:D.ShadingType.CLEAR},borders:brd||BG,margins:{top:80,bottom:80,left:120,right:120},children:[new D.Paragraph({children:[new D.TextRun({text:t,bold:true,size:22,font:'Arial'})]})]});}
-    function dC(t,w,brd){return new D.TableCell({width:{size:w||2340,type:D.WidthType.DXA},borders:brd||BG,margins:{top:80,bottom:80,left:120,right:120},children:[new D.Paragraph({children:[new D.TextRun({text:t||'-',size:22,font:'Arial'})]})]});}
-    function sT(t,col){return new D.Paragraph({spacing:{before:320,after:120},children:[new D.TextRun({text:t,bold:true,size:28,color:col||'0F6E56',font:'Arial'})]});}
-    function gap(){return new D.Paragraph({spacing:{before:80,after:40},children:[new D.TextRun({text:'',font:'Arial'})]});}
-    function divider(){return new D.Paragraph({border:{bottom:{style:D.BorderStyle.SINGLE,size:4,color:'E5E7EB',space:1}},spacing:{before:200,after:200},children:[new D.TextRun({text:'',font:'Arial'})]});}
-    var rtype=document.querySelector('input[name="rtype"]:checked');
-    var accomYN=document.querySelector('input[name="accom_yn"]:checked');
-    var transYN=document.querySelector('input[name="trans_yn"]:checked');
-    // sites rows
-    var siteRows=[];
-    document.querySelectorAll('[id^="site-"]').forEach(function(b,i){
-      var idx=b.id.replace('site-','');var name=gv('st'+idx+'_name');if(!name)return;
-      var siteTitleCell = new D.TableCell({columnSpan:4,width:{size:9360,type:D.WidthType.DXA},shading:{fill:'E8F7F2',type:D.ShadingType.CLEAR},borders:BG,margins:{top:80,bottom:80,left:120,right:120},children:[new D.Paragraph({children:[new D.TextRun({text:'Work Site '+(i+1)+': '+name,bold:true,size:22,font:'Arial',color:'0F6E56'})]})]});
-    siteRows.push(new D.TableRow({children:[siteTitleCell]}));
-      siteRows.push(new D.TableRow({children:[lC('Address'),dC(gv('st'+idx+'_addr')),lC('Workers at site'),dC(gv('st'+idx+'_workers'))]}));
-      siteRows.push(new D.TableRow({children:[lC('Contact'),dC(gv('st'+idx+'_contact')),lC('Phone'),dC(gv('st'+idx+'_phone'))]}));
-      siteRows.push(new D.TableRow({children:[lC('Email'),dC(gv('st'+idx+'_email'),4680),lC('',0),dC('',0)]}));
-    });
-    // accom rows
-    var accomRows=[];
-    if(accomYN&&accomYN.value==='yes'){
-      document.querySelectorAll('[id^="accom-"]').forEach(function(b,i){
-        var idx=b.id.replace('accom-','');var addr=gv('ac'+idx+'_addr');if(!addr)return;
-        var accomTitleCell = new D.TableCell({columnSpan:4,width:{size:9360,type:D.WidthType.DXA},shading:{fill:'EBF3FC',type:D.ShadingType.CLEAR},borders:BG,margins:{top:80,bottom:80,left:120,right:120},children:[new D.Paragraph({children:[new D.TextRun({text:'Accommodation '+(i+1),bold:true,size:22,font:'Arial',color:'185FA5'})]})]});
-        accomRows.push(new D.TableRow({children:[accomTitleCell]}));
-        accomRows.push(new D.TableRow({children:[lC('Address',2340,'EEF5FB',BB),dC(addr,2340,BB),lC('Type',2340,'EEF5FB',BB),dC(gv('ac'+idx+'_type'),2340,BB)]}));
-        accomRows.push(new D.TableRow({children:[lC('Max Capacity',2340,'EEF5FB',BB),dC(gv('ac'+idx+'_cap'),2340,BB),lC('Bedrooms',2340,'EEF5FB',BB),dC(gv('ac'+idx+'_beds'),2340,BB)]}));
-        accomRows.push(new D.TableRow({children:[lC('Bathrooms',2340,'EEF5FB',BB),dC(gv('ac'+idx+'_baths'),2340,BB),lC('Provider',2340,'EEF5FB',BB),dC(gv('ac'+idx+'_prov'),2340,BB)]}));
-        var rentItems=['Rent','WiFi','Electricity','Furniture','Water','Gas','Other'];
-        var rentIds=['ac'+idx+'_rent','ac'+idx+'_wifi','ac'+idx+'_elec','ac'+idx+'_furn','ac'+idx+'_water','ac'+idx+'_gas','ac'+idx+'_other'];
-        var rentStr=rentItems.map(function(n,j){var v=gv(rentIds[j]);return v?n+': $'+v:'';}).filter(Boolean).join(' | ');
-        accomRows.push(new D.TableRow({children:[lC('Weekly costs',2340,'EEF5FB',BB),dC(rentStr,4680,BB),lC('',0,'EEF5FB',BB),dC('',0,BB)]}));
-      });
-    }
-    // vehicle rows
-    var vehicleRows=[];
-    if(transYN&&transYN.value==='yes'){
-      document.querySelectorAll('[id^="vehicle-"]').forEach(function(b,i){
-        var idx=b.id.replace('vehicle-','');var make=gv('vh'+idx+'_make');if(!make)return;
-        vehicleRows.push(new D.TableRow({children:[lC('Vehicle '+(i+1),2340,'EEF5FB',BB),dC(make,2340,BB),lC('Seats',2340,'EEF5FB',BB),dC(gv('vh'+idx+'_seats'),2340,BB)]}));
-        vehicleRows.push(new D.TableRow({children:[lC('Registration',2340,'EEF5FB',BB),dC(gv('vh'+idx+'_rego'),4680,BB),lC('',0,'EEF5FB',BB),dC('',0,BB)]}));
-      });
-      var tcItems=['Usage','Fuel','Registration','Insurance','Mileage','Cleaning','Service & Maintenance','Additional'];
-      var tcIds=['tc_usage','tc_fuel','tc_rego','tc_ins','tc_mile','tc_clean','tc_service','tc_other'];
-      tcIds.forEach(function(id,i){var v=gv(id);if(v)vehicleRows.push(new D.TableRow({children:[lC(tcItems[i],2340,'EEF5FB',BB),dC('$'+parseFloat(v).toFixed(2),4680,BB),lC('',0,'EEF5FB',BB),dC('',0,BB)]}));});
-      vehicleRows.push(new D.TableRow({children:[lC('TOTAL (weekly)',2340,'E8F7F2',BB),dC(document.getElementById('tc_total')?document.getElementById('tc_total').textContent:'-',4680,BB),lC('',0,'E8F7F2',BB),dC('',0,BB)]}));
-    }
-    var cpText='In an unlikely event of requiring contingency plans to be activated, Agri Labour Australia will work closely with '+(gv('h_name')||'[Employer]')+' to ensure that workers can be re-deployed into the same roles into other regions. '+(gv('h_name')||'[Employer]')+' services '+(gv('cp_count')||'[NUMBER]')+' region(s) across regional '+(gv('cp_states')||'[STATE]')+', namely: '+(gv('cp_regions')||'[REGIONS]')+'. Further, should work not be available in other locations with '+(gv('h_name')||'[Employer]')+', Agri Labour Australia can deploy the workers to other providers on either a temporary basis or for the remainder of the worker\'s visa. Should a contingency plan be activated, Agri Labour Australia will organise and manage the accommodation and transportation required for the workers. Agri Labour Australia will also notify the department in accordance with the guidelines.';
-    var doc=new D.Document({styles:{default:{document:{run:{font:'Arial',size:22}}}},sections:[{
-      properties:{page:{size:{width:12240,height:15840},margin:{top:1080,right:1080,bottom:1080,left:1080}}},
-      children:[
-        new D.Paragraph({spacing:{before:0,after:60},children:[new D.TextRun({text:'ALA PALM SERVICES',bold:true,size:44,color:'1D9E75',font:'Arial'})]}),
-        new D.Paragraph({spacing:{before:0,after:80},children:[new D.TextRun({text:'REQUIRED INFORMATION FOR RECRUITMENT PLANS (RP)',bold:true,size:26,font:'Arial'})]}),
-        new D.Paragraph({spacing:{before:0,after:280},children:[new D.TextRun({text:'Entity: '+gv('g_entity')+'   |   AM: '+gv('g_am')+'   |   Generated: '+today,size:20,color:'6B7280',font:'Arial'})]}),
-        new D.Paragraph({border:{bottom:{style:D.BorderStyle.SINGLE,size:8,color:'1D9E75',space:1}},spacing:{before:0,after:280},children:[new D.TextRun({text:'',font:'Arial'})]}),
-        sT('Host details','0F6E56'),
-        new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[2340,2340,2340,2340],rows:[
-          new D.TableRow({children:[hC('HOST DETAILS - '+(gv('h_ctype')||'New Client')+' - AM: '+gv('g_am'),9360,'1D9E75')]}),
-          new D.TableRow({children:[lC('Host Name'),dC(gv('h_name')),lC('ABN'),dC(gv('h_abn'))]}),
-          new D.TableRow({children:[lC('Contact Person'),dC(gv('h_contact')),lC('Phone'),dC(gv('h_phone'))]}),
-          new D.TableRow({children:[lC('Email'),dC(gv('h_email')),lC('Industry'),dC(gv('h_industry'))]}),
-          new D.TableRow({children:[lC('Industry Subdivision'),dC(gv('h_ind_sub')),lC('Industry Division'),dC(gv('h_ind_div'))]}),
-          new D.TableRow({children:[lC('Business Address'),dC(gv('h_addr'),4680),lC('',0),dC('',0)]}),
-        ]}),gap(),
-        sT('RP details','0F6E56'),
-        new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[2340,2340,2340,2340],rows:[
-          new D.TableRow({children:[hC('RP DETAILS',9360,'1D9E75')]}),
-          new D.TableRow({children:[lC('Recruitment Type'),dC(rtype?rtype.value:'-'),lC('Sending Country'),dC(gv('rp_country'))]}),
-          new D.TableRow({children:[lC('Programme'),dC(gv('rp_prog')),lC('Visa Length'),dC(gv('rp_visa'))]}),
-          new D.TableRow({children:[lC('Total Workers'),dC(gv('rp_workers')),lC('Award & Level'),dC(gv('rp_award'))]}),
-          new D.TableRow({children:[lC('Mobilisation Date'),dC(fd(gv('rp_start'))),lC('Contract End Date'),dC(fd(gv('rp_end')))]}),
-          new D.TableRow({children:[lC('Job Title(s)'),dC(getRolesSummary()||'-',4680),lC('',0),dC('',0)]}),
-          new D.TableRow({children:[lC('Pay Rate'),dC(gv('rp_pay')),lC('Pay Frequency'),dC(gv('rp_pay_freq'))]}),
-          new D.TableRow({children:[lC('Hours/Week'),dC(gv('rp_hrs_pw')),lC('Working Days'),dC(gv('rp_days'))]}),
-          new D.TableRow({children:[lC('Hours of Work'),dC(gv('rp_hours')),lC('Rest & Meal Breaks'),dC(gv('rp_breaks'))]}),
-          new D.TableRow({children:[lC('Leave Entitlements'),dC(gv('rp_leave'),4680),lC('',0),dC('',0)]}),
-          new D.TableRow({children:[lC('Job Description'),dC(gv('rp_jobdesc'),4680),lC('',0),dC('',0)]}),
-          new D.TableRow({children:[lC('Conditions of Work'),dC(gv('rp_conditions'),4680),lC('',0),dC('',0)]}),
-        ]}),gap(),
-        sT('Work site(s)','0F6E56'),
-        new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[2340,2340,2340,2340],rows:siteRows.length?siteRows:[new D.TableRow({children:[hC('WORK SITES',9360,'1D9E75')]}),new D.TableRow({children:[dC('No work sites entered.',9360)]})]}),gap(),
-        sT('Returning Workers','0F6E56'),
-        (function(){
-          var retYN = document.querySelector('input[name="returning_yn"]:checked');
-          var workers = getReturningWorkersSummary();
-          if (!retYN || retYN.value !== 'yes' || workers.length === 0) {
-            return new D.Paragraph({children:[new D.TextRun({text:'No returning workers for this order.',size:22,font:'Arial'})]});
-          }
-          var rows = [new D.TableRow({children:[hC('RETURNING WORKERS',9360,'1D9E75')]})];
-          workers.forEach(function(w, i) {
-            var retTitleCell = new D.TableCell({columnSpan:4,width:{size:9360,type:D.WidthType.DXA},shading:{fill:'E8F7F2',type:D.ShadingType.CLEAR},borders:BG,margins:{top:80,bottom:80,left:120,right:120},children:[new D.Paragraph({children:[new D.TextRun({text:'Worker '+(i+1)+': '+w.name,bold:true,size:22,font:'Arial',color:'0F6E56'})]})]});
-            rows.push(new D.TableRow({children:[retTitleCell]}));
-            rows.push(new D.TableRow({children:[lC('Bullhorn ID'),dC(w.bhid),lC('Country'),dC(w.country)]}));
-            rows.push(new D.TableRow({children:[lC('Previous RP'),dC(w.prevRp),lC('Previous Employer'),dC(w.prevEmployer)]}));
-            rows.push(new D.TableRow({children:[lC('Prev Placement End'),dC(fd(w.prevEnd)),lC('Return Type'),dC(w.returnType)]}));
-            rows.push(new D.TableRow({children:[lC('Visa Status'),dC(w.visa),lC('Role This Placement'),dC(w.role)]}));
-            rows.push(new D.TableRow({children:[lC('Pay Rate'),dC(w.pay),lC('Separate RP Needed?'),dC(w.role || w.pay ? 'CHECK WITH TEAM' : 'No')]}));
-            if (w.notes) rows.push(new D.TableRow({children:[lC('Notes'),dC(w.notes,4680),lC('',0),dC('',0)]}));
-          });
-          return new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[2340,2340,2340,2340],rows:rows});
-        })(),gap(),
-        sT('Accommodation','0F6E56'),
-        accomRows.length?new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[2340,2340,2340,2340],rows:[new D.TableRow({children:[hC('ACCOMMODATION DETAILS',9360,'185FA5')]}),].concat(accomRows)}):new D.Paragraph({children:[new D.TextRun({text:'Accommodation: '+(accomYN?'Client not providing accommodation':'Not specified'),size:22,font:'Arial'})]}),gap(),
-        sT('Transport','0F6E56'),
-        vehicleRows.length?new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[2340,2340,2340,2340],rows:[new D.TableRow({children:[hC('TRANSPORT DETAILS',9360,'185FA5')]}),].concat(vehicleRows)}):new D.Paragraph({children:[new D.TextRun({text:'Transport: '+(transYN?'Client not providing transport':'Not specified'),size:22,font:'Arial'})]}),gap(),
-        sT('Contingency plan','0F6E56'),
-        new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[9360],rows:[
-          new D.TableRow({children:[hC('CONTINGENCY PLAN TEMPLATE',9360,'1D9E75')]}),
-          new D.TableRow({children:[new D.TableCell({width:{size:9360,type:D.WidthType.DXA},borders:BG,margins:{top:120,bottom:120,left:160,right:160},children:[new D.Paragraph({children:[new D.TextRun({text:cpText,size:22,font:'Arial'})]})]})]})
-        ]}),gap(),
-        sT('Cultural competency contact','0F6E56'),
-        new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[2340,2340,2340,2340],rows:[
-          new D.TableRow({children:[hC('CULTURAL COMPETENCY CONFIRMATION DETAILS',9360,'1D9E75')]}),
-          new D.TableRow({children:[new D.TableCell({columnSpan:4,width:{size:9360,type:D.WidthType.DXA},borders:BG,margins:{top:80,bottom:80,left:120,right:120},children:[new D.Paragraph({children:[new D.TextRun({text:'Who is the most appropriate person within the organisation to confirm that all Key Personnel at the workplace meet, or will meet, the cultural competency requirements outlined in the DEED and Guidelines?',size:20,italics:true,font:'Arial'})]})]})]}),
-          new D.TableRow({children:[lC('Full Name'),dC(gv('cc_name')),lC('Position Title'),dC(gv('cc_pos'))]}),
-          new D.TableRow({children:[lC('Phone Number'),dC(gv('cc_phone')),lC('Email Address'),dC(gv('cc_email'))]}),
-        ]}),divider(),
-        new D.Paragraph({spacing:{before:200,after:120},children:[new D.TextRun({text:'PART 2 - RECRUITMENT REQUIREMENTS',bold:true,size:24,color:'555555',font:'Arial'})]}),
-        sT('Recruitment requirements','185FA5'),
-        new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[2340,2340,2340,2340],rows:[
-          new D.TableRow({children:[hC('RECRUITMENT DETAILS',9360,'185FA5')]}),
-          new D.TableRow({children:[lC('Preferred Country',2340,'EEF5FB',BB),dC(gv('r_country')||'Any / Open',4680,BB),lC('',0,'EEF5FB',BB),dC('',0,BB)]}),
 
-        ]}),gap(),
-        sT('Interview & selection','185FA5'),
-        new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[2340,2340,2340,2340],rows:[
-          new D.TableRow({children:[hC('INTERVIEW & SELECTION',9360,'185FA5')]}),
-          new D.TableRow({children:[lC('Interview Format',2340,'EEF5FB',BB),dC(gv('i_format'),2340,BB),lC('Employer Involvement',2340,'EEF5FB',BB),dC(gv('i_emp_inv'),2340,BB)]}),
-          new D.TableRow({children:[lC('Key Questions / Focus',2340,'EEF5FB',BB),dC(gv('i_qs'),4680,BB),lC('',0,'EEF5FB',BB),dC('',0,BB)]}),
-          new D.TableRow({children:[lC('Tests / Assessments',2340,'EEF5FB',BB),dC(gv('i_tests'),4680,BB),lC('',0,'EEF5FB',BB),dC('',0,BB)]}),
-        ]}),gap(),
-        sT('Worker criteria','185FA5'),
-        new D.Table({width:{size:9360,type:D.WidthType.DXA},columnWidths:[2340,2340,2340,2340],rows:[
-          new D.TableRow({children:[hC('WORKER CRITERIA',9360,'185FA5')]}),
-          new D.TableRow({children:[lC('Age Range',2340,'EEF5FB',BB),dC(gv('wc_age'),2340,BB),lC('Min Experience',2340,'EEF5FB',BB),dC(gv('wc_exp'),2340,BB)]}),
-          new D.TableRow({children:[lC('English Requirement',2340,'EEF5FB',BB),dC(gv('wc_eng'),4680,BB),lC('',0,'EEF5FB',BB),dC('',0,BB)]}),
-          new D.TableRow({children:[lC('Licences / Certs',2340,'EEF5FB',BB),dC(getChecked('lic'),4680,BB),lC('',0,'EEF5FB',BB),dC('',0,BB)]}),
-          new D.TableRow({children:[lC('Physical Requirements',2340,'EEF5FB',BB),dC(getChecked('phys'),4680,BB),lC('',0,'EEF5FB',BB),dC('',0,BB)]}),
-          new D.TableRow({children:[lC('Other Skills / Attributes',2340,'EEF5FB',BB),dC(gv('wc_other'),4680,BB),lC('',0,'EEF5FB',BB),dC('',0,BB)]}),
-          new D.TableRow({children:[lC('Priority / Urgency',2340,'EEF5FB',BB),dC(gv('wc_priority'),4680,BB),lC('',0,'EEF5FB',BB),dC('',0,BB)]}),
-          new D.TableRow({children:[lC('Instructions for Recruitment Team',2340,'EEF5FB',BB),dC(gv('wc_notes'),4680,BB),lC('',0,'EEF5FB',BB),dC('',0,BB)]}),
-        ]}),gap(),
-        new D.Paragraph({spacing:{before:280,after:0},children:[new D.TextRun({text:'ALA PALM Services - Confidential Recruitment Order | '+today,size:18,color:'9CA3AF',font:'Arial'})]})
-      ]
-    }]});
+  function runExport(){
+    var D = docx;
+    var data = collectFormData();
+    var today = new Date().toLocaleDateString('en-AU', {day:'2-digit', month:'long', year:'numeric'});
+
+    var GREEN = '0B6E4F', GREEN_DARK = '064534', GREEN_LIGHT = 'E6F5EF', GREY = '6B7280', TEXT = '111827';
+
+    var CLIENT_TYPE = { 'new': 'New client', 'existing': 'Existing client' };
+    var ACCOM_STATUS = { 'approved': 'Previously approved', 'new': 'Brand new / not yet approved' };
+    var VEHICLE_STATUS = { 'existing': 'Using existing vehicle', 'new': 'Brand new vehicle required' };
+    var WORKER_SOURCE = { 'new': 'New workers only', 'returning': 'Returning workers only', 'mixed': 'Mix of new and returning' };
+    var INTERVIEW_FORMAT = {
+      'video_emp': 'Video call (employer + ALA)', 'video_ala': 'Video call (ALA only)',
+      'inperson': 'In-country face-to-face', 'no_interview': 'No interview \u2014 ALA to select'
+    };
+    var PAY_TYPE = { 'hourly': 'Hourly rate only', 'piecerate': 'Piece rate only', 'mixed': 'Hourly + piece rate (mixed)' };
+    function lookup(map, val) { return map[val] || val || ''; }
+    function fmtDate(val) {
+      if (!val) return '';
+      var d = new Date(val);
+      if (isNaN(d.getTime())) return val;
+      return d.toLocaleDateString('en-AU');
+    }
+
+    function fieldRow(label, value) {
+      var parts = String(value).split(' | ').filter(function(p){ return p.trim(); });
+      var valueParas = parts.map(function(part, i) {
+        return new D.Paragraph({ children:[new D.TextRun({text:part.trim(), size:20, color:TEXT, font:'Arial'})], spacing:{after: i < parts.length-1 ? 60 : 0} });
+      });
+      if (valueParas.length === 0) valueParas = [new D.Paragraph({children:[new D.TextRun({text:'-', size:20, color:TEXT, font:'Arial'})]})];
+      return new D.TableRow({ children:[
+        new D.TableCell({ width:{size:2600,type:D.WidthType.DXA}, margins:{top:80,bottom:80,left:100,right:100},
+          children:[new D.Paragraph({children:[new D.TextRun({text:label, bold:true, size:18, color:GREY, font:'Arial'})]})] }),
+        new D.TableCell({ width:{size:6800,type:D.WidthType.DXA}, margins:{top:80,bottom:80,left:100,right:100}, children:valueParas })
+      ]});
+    }
+
+    function section(title, fields) {
+      var visible = fields.filter(function(f){ return f[1] && f[1] !== '' && f[1] !== '-' && f[1] !== 'undefined'; });
+      if (visible.length === 0) return [];
+      return [
+        new D.Paragraph({text:'', spacing:{before:160}}),
+        new D.Table({ width:{size:9400,type:D.WidthType.DXA}, columnWidths:[9400], rows:[ new D.TableRow({children:[
+          new D.TableCell({ width:{size:9400,type:D.WidthType.DXA}, shading:{type:D.ShadingType.CLEAR, fill:GREEN_LIGHT}, margins:{top:60,bottom:60,left:140,right:140},
+            children:[new D.Paragraph({children:[new D.TextRun({text:title.toUpperCase(), bold:true, size:20, color:GREEN_DARK, font:'Arial'})]})] })
+        ]}) ]}),
+        new D.Table({ width:{size:9400,type:D.WidthType.DXA}, columnWidths:[2600,6800], rows: visible.map(function(f){ return fieldRow(f[0], f[1]); }) })
+      ];
+    }
+
+    var jobOrders = data['Job Orders'] || '';
+    var firstJob = jobOrders.split('|')[0].trim();
+
+    var children = [
+      new D.Table({ width:{size:9600,type:D.WidthType.DXA}, columnWidths:[9600], rows:[ new D.TableRow({children:[
+        new D.TableCell({ width:{size:9600,type:D.WidthType.DXA}, shading:{type:D.ShadingType.CLEAR, fill:GREEN}, margins:{top:200,bottom:200,left:200,right:200}, children:[
+          new D.Paragraph({children:[new D.TextRun({text:'ALA', bold:true, size:20, color:GREEN, font:'Arial'})], shading:{type:D.ShadingType.CLEAR, fill:'FFFFFF'}}),
+          new D.Paragraph({children:[new D.TextRun({text:'PALM Recruitment Plan Order', bold:true, size:32, color:'FFFFFF', font:'Arial'})], spacing:{before:100}}),
+          new D.Paragraph({children:[new D.TextRun({text:'Submitted '+today+'  \u00b7  '+(data['Account Manager']||'-'), italics:true, size:19, color:'D1FAE5', font:'Arial'})], spacing:{before:40}})
+        ]})
+      ]}) ]}),
+      new D.Paragraph({text:'', spacing:{before:100}}),
+      new D.Table({ width:{size:9600,type:D.WidthType.DXA}, columnWidths:[3200,3200,3200], rows:[ new D.TableRow({children:[
+        new D.TableCell({ width:{size:3200,type:D.WidthType.DXA}, shading:{type:D.ShadingType.CLEAR, fill:'F9FAFB'}, margins:{top:120,bottom:60,left:140,right:140}, children:[
+          new D.Paragraph({children:[new D.TextRun({text:'EMPLOYER', bold:true, size:15, color:GREY, font:'Arial'})]}),
+          new D.Paragraph({children:[new D.TextRun({text:data['Employer Name']||'-', bold:true, size:22, color:TEXT, font:'Arial'})], spacing:{before:40}})
+        ]}),
+        new D.TableCell({ width:{size:3200,type:D.WidthType.DXA}, shading:{type:D.ShadingType.CLEAR, fill:'F9FAFB'}, margins:{top:120,bottom:60,left:140,right:140}, children:[
+          new D.Paragraph({children:[new D.TextRun({text:'JOB ORDER', bold:true, size:15, color:GREY, font:'Arial'})]}),
+          new D.Paragraph({children:[new D.TextRun({text:firstJob||'-', bold:true, size:22, color:TEXT, font:'Arial'})], spacing:{before:40}})
+        ]}),
+        new D.TableCell({ width:{size:3200,type:D.WidthType.DXA}, shading:{type:D.ShadingType.CLEAR, fill:'F9FAFB'}, margins:{top:120,bottom:60,left:140,right:140}, children:[
+          new D.Paragraph({children:[new D.TextRun({text:'MOBILISATION', bold:true, size:15, color:GREY, font:'Arial'})]}),
+          new D.Paragraph({children:[new D.TextRun({text:fmtDate(data['Mobilisation Date'])||'-', bold:true, size:22, color:GREEN_DARK, font:'Arial'})], spacing:{before:40}})
+        ]})
+      ]}) ]})
+    ];
+
+    children = children.concat(section('Order Info', [
+      ['Entity', data['Entity']], ['Account Manager', data['Account Manager']],
+      ['Date', fmtDate(data['Date'])], ['Job Orders', data['Job Orders']], ['Total Workers', data['Total Workers']]
+    ]));
+
+    children = children.concat(section('Host Employer', [
+      ['Client Type', lookup(CLIENT_TYPE, data['Client Type'])], ['Employer Name', data['Employer Name']],
+      ['ABN', data['ABN']], ['Contact Person', data['Contact Person']], ['Phone', data['Phone']],
+      ['Email', data['Email']], ['Business Address', data['Address']], ['Industry', data['Industry']]
+    ]));
+
+    children = children.concat(section('RP Details', [
+      ['Sending Country', data['Sending Country']], ['Programme', data['Programme']], ['Visa Length', data['Visa Length']],
+      ['Mobilisation Date', fmtDate(data['Mobilisation Date'])], ['Contract End Date', fmtDate(data['Contract End Date'])],
+      ['Pay Type', lookup(PAY_TYPE, data['Pay Type'])], ['Award & Level', data['Award & Level']],
+      ['Pay Frequency', data['Pay Frequency']], ['Guaranteed Hours / Week', data['Guaranteed Hours/Week']],
+      ['Hourly Rate', data['Pay Rate']], ['Job Description', data['Job Description']],
+      ['Work Conditions', data['Work Conditions']], ['Working Days', data['Working Days']], ['Hours of Work', data['Hours of Work']]
+    ]));
+
+    if (data['Pay Type'] && data['Pay Type'] !== 'Hourly rate only') {
+      children = children.concat(section('Piece Rate Details', [
+        ['Tasks', data['Piece Rate Tasks']], ['Minimum Floor Rate', data['Piece Rate Floor']],
+        ['Output Measurement', data['Piece Rate Measurement']], ['Notes', data['Piece Rate Notes']]
+      ]));
+    }
+
+    children = children.concat(section('Work Sites', [ ['Sites', data['Work Sites']] ]));
+
+    children = children.concat(section('Accommodation', [
+      ['Provider', data['Accommodation Provider']], ['Address', data['Accommodation Address']],
+      ['Status', lookup(ACCOM_STATUS, data['Accommodation Status'])]
+    ]));
+
+    children = children.concat(section('Transport', [
+      ['Provider', data['Transport Provider']], ['Vehicle Status', lookup(VEHICLE_STATUS, data['Vehicle Status'])],
+      ['Existing Vehicle Regos', data['Existing Vehicle Regos']], ['Vehicles Needed', data['Vehicles Needed']],
+      ['Seats Per Vehicle', data['Seats Per Vehicle']], ['Vehicle Requirements', data['Vehicle Requirements']]
+    ]));
+
+    children = children.concat(section('Contingency Plan', [
+      ['Approved Employer (AE)', data['AE Name']], ['Host Employer', data['CP Employer']],
+      ['State(s)', data['CP States']], ['Contingency Plan', data['Contingency Plan']]
+    ]));
+
+    children = children.concat(section('Cultural Competency', [
+      ['Contact', data['Cultural Competency Contact']], ['Phone', data['CC Phone']], ['Email', data['CC Email']]
+    ]));
+
+    children = children.concat(section('Recruitment Details', [
+      ['Sending Country', data['Preferred Country']], ['Candidates to Interview/Shortlist', data['Candidates Needed']],
+      ['Preferred Gender', data['Preferred Gender']], ['Weekend Availability Required', data['Weekend Availability Required']],
+      ['Worker Source', lookup(WORKER_SOURCE, data['Worker Source'])],
+      ['Interview Format', lookup(INTERVIEW_FORMAT, data['Interview Format'])],
+      ['Employer Involvement', data['Employer Involvement']], ['Returning Workers', data['Returning Workers']],
+      ['Special Requests \u2014 Before Arrival', data['Special Requests (Before)']],
+      ['Special Requests \u2014 After Arrival', data['Special Requests (After)']]
+    ]));
+
+    children.push(new D.Paragraph({text:'', spacing:{before:240}}));
+    children.push(new D.Paragraph({border:{top:{color:'E5E7EB', space:4, style:D.BorderStyle.SINGLE, size:4}}, children:[]}));
+    children.push(new D.Paragraph({children:[new D.TextRun({text:'Generated by ALA PALM Recruitment Plan Builder', italics:true, size:17, color:GREY, font:'Arial'})], alignment:D.AlignmentType.CENTER, spacing:{before:100}}));
+
+    var doc = new D.Document({ sections:[{ properties:{ page:{ size:{width:11907,height:16840}, margin:{top:700,bottom:700,left:900,right:900} } }, children: children }] });
+
     D.Packer.toBlob(doc).then(function(blob){
-      var url=URL.createObjectURL(blob);var a=document.createElement('a');
-      a.href=url;a.download='RP_Order_'+(gv('h_name')||'Employer').replace(/[^a-zA-Z0-9]/g,'_')+'_'+new Date().toISOString().split('T')[0]+'.docx';
-      a.click();URL.revokeObjectURL(url);showToast('Recruitment Plan exported successfully');
-    }).catch(function(e){console.error(e);showToast('Export failed - check browser console');});
+      var url = URL.createObjectURL(blob);
+      var a = document.createElement('a');
+      a.href = url;
+      var empName = (data['Employer Name']||'Order').replace(/[^a-z0-9]/gi,'_');
+      a.download = 'RP_Order_'+empName+'_'+new Date().toISOString().split('T')[0]+'.docx';
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast('Recruitment Plan exported successfully');
+    }).catch(function(e){ console.error(e); showToast('Export failed - check browser console'); });
   }
-  if(typeof docx!=='undefined'){runExport();}
-  else{var s=document.createElement('script');s.src='https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js';s.onload=runExport;s.onerror=function(){var s2=document.createElement('script');s2.src='https://unpkg.com/docx@8.5.0/build/index.umd.js';s2.onload=runExport;s2.onerror=function(){showToast('Export requires internet connection');};document.head.appendChild(s2);};document.head.appendChild(s);}
+
+  if (typeof docx !== 'undefined') { runExport(); }
+  else {
+    var s = document.createElement('script');
+    s.src = 'https://cdnjs.cloudflare.com/ajax/libs/docx/8.5.0/docx.umd.min.js';
+    s.onload = runExport;
+    s.onerror = function(){
+      var s2 = document.createElement('script');
+      s2.src = 'https://unpkg.com/docx@8.5.0/build/index.umd.js';
+      s2.onload = runExport;
+      s2.onerror = function(){ showToast('Export requires internet connection'); };
+      document.head.appendChild(s2);
+    };
+    document.head.appendChild(s);
+  }
 }
 
 
@@ -2296,7 +2347,7 @@ function renderStandard(container) {
   html += '<div style="padding:8px 12px;background:var(--s2);border:1px solid var(--br);border-radius:6px;font-size:14px;color:var(--tx)">' + rpCountry + '</div>';
   html += '<input type="hidden" id="r_country" value="' + rpCountry + '">';
   html += '</div>';
-  html += '<div class="fld"><label>Candidates to interview / shortlist</label>';
+  html += '<div class="fld"><label>Candidates to interview / shortlist <span class="req">*</span></label>';
   html += '<input type="number" id="r_candidates" placeholder="e.g. 15 (not the total mobilisation number)"></div>';
   html += '</div>';
 
@@ -2306,7 +2357,7 @@ function renderStandard(container) {
 
   // NEW OR RETURNING CARD
   html += '<div class="card"><div class="card-title">New or returning workers?</div>';
-  html += '<div class="fg tw"><div class="fld"><label>Worker source</label>';
+  html += '<div class="fg tw"><div class="fld"><label>Worker source <span class="req">*</span></label>';
   html += '<select id="r_worker_source" onchange="toggleWorkerSource()">';
   html += '<option value="">- select -</option>';
   html += '<option value="new">New workers only</option>';
@@ -2318,13 +2369,13 @@ function renderStandard(container) {
   html += '<div id="new-workers-section" style="display:none;margin-top:12px">';
   html += '<div class="card-title" style="margin-top:8px;font-size:12px">What are you looking for?</div>';
   html += '<div class="fg tw">';
-  html += '<div class="fld"><label>Age range</label><input type="text" id="wc_age" placeholder="e.g. 21 - 45"></div>';
-  html += '<div class="fld"><label>Minimum experience</label><select id="wc_exp"><option value="">- select -</option>';
+  html += '<div class="fld"><label>Age range <span class="req">*</span></label><input type="text" id="wc_age" placeholder="e.g. 21 - 45"></div>';
+  html += '<div class="fld"><label>Minimum experience <span class="req">*</span></label><select id="wc_exp"><option value="">- select -</option>';
   html += '<option>No experience required</option><option>1 year relevant experience</option>';
   html += '<option>2+ years relevant experience</option><option>Trade qualified</option></select></div>';
   html += '</div>';
   html += '<div class="fg tw">';
-  html += '<div class="fld"><label>Gender preference</label><select id="wc_gender"><option value="">No preference</option>';
+  html += '<div class="fld"><label>Gender preference <span class="req">*</span></label><select id="wc_gender"><option value="">No preference</option>';
   html += '<option>Male preferred</option><option>Female preferred</option><option>Male only</option><option>Female only</option></select></div>';
   html += '<div class="fld"><label>Weekend availability required?</label><select id="wc_weekend"><option value="">- select -</option>';
   html += '<option>Yes - must be available weekends</option>';
@@ -2354,7 +2405,7 @@ function renderStandard(container) {
   html += '<label class="ck-opt"><input type="checkbox" value="Shift work / nights"> Shift work / nights</label>';
   html += '<label class="ck-opt"><input type="checkbox" value="No specific requirements"> No specific requirements</label>';
   html += '</div></div>';
-  html += '<div class="fg f"><div class="fld"><label>Other skills or attributes</label>';
+  html += '<div class="fg f"><div class="fld"><label>Other skills or attributes <span class="req">*</span></label>';
   html += '<textarea id="wc_other" placeholder="e.g. Team player, punctual, agricultural background..."></textarea></div></div>';
   html += '</div>';
 
@@ -2381,7 +2432,7 @@ function renderStandard(container) {
   // INTERVIEW CARD
   html += '<div class="card"><div class="card-title">Interview &amp; selection</div>';
   html += '<div class="fg tw">';
-  html += '<div class="fld"><label>Interview format</label>';
+  html += '<div class="fld"><label>Interview format <span class="req">*</span></label>';
   html += '<select id="i_format" onchange="onInterviewFormatChange()">';
   html += '<option value="">- select -</option>';
   html += '<option value="video_emp">Video call (employer + ALA)</option>';
@@ -2389,7 +2440,7 @@ function renderStandard(container) {
   html += '<option value="inperson">In-country face-to-face</option>';
   html += '<option value="no_interview">No interview - ALA to select</option>';
   html += '</select></div>';
-  html += '<div class="fld" id="emp-inv-wrap"><label>Employer involvement</label>';
+  html += '<div class="fld" id="emp-inv-wrap"><label>Employer involvement <span class="req">*</span></label>';
   html += '<select id="i_emp_inv">';
   html += '<option value="">- select -</option>';
   html += '<option>Yes - employer interviews candidates</option>';
@@ -2403,7 +2454,7 @@ function renderStandard(container) {
   html += '<div style="margin-top:6px;padding:8px 12px;background:#FEF3C7;border:1px solid #FCD34D;border-radius:6px;font-size:12px;color:#92400E">';
   html += '<strong>⚠ Note:</strong> In-country travel can only proceed once the RP has been submitted and approved. Please confirm the date with the Compliance team before booking.';
   html += '</div></div></div>';
-  html += '<div class="fg f"><div class="fld"><label>Key interview questions / focus areas</label>';
+  html += '<div class="fg f"><div class="fld"><label>Key interview questions / focus areas <span class="req">*</span></label>';
   html += '<textarea id="i_qs" placeholder="e.g. Experience with machinery, physical fitness, willingness to relocate..."></textarea></div></div>';
   html += '<div class="fg f"><div class="fld"><label>Tests or assessments required</label>';
   html += '<textarea id="i_tests" placeholder="e.g. Forklift licence check, physical medical, English language test..."></textarea></div></div>';
@@ -2411,15 +2462,15 @@ function renderStandard(container) {
 
   // SPECIAL REQUESTS CARD
   html += '<div class="card"><div class="card-title">Special requests</div>';
-  html += '<div class="fg f"><div class="fld"><label>Before workers arrive</label>';
+  html += '<div class="fg f"><div class="fld"><label>Before workers arrive <span class="req">*</span></label>';
   html += '<textarea id="sr_before" placeholder="e.g. Workers need white card training before arrival. Please arrange police checks. Specific induction requirements..."></textarea></div></div>';
-  html += '<div class="fg f"><div class="fld"><label>After workers arrive</label>';
+  html += '<div class="fg f"><div class="fld"><label>After workers arrive <span class="req">*</span></label>';
   html += '<textarea id="sr_after" placeholder="e.g. Orientation tour of facility on Day 1. Employer to provide PPE on first day. Weekly welfare check-ins requested..."></textarea></div></div>';
   html += '</div>';
 
   html += '<div class="section-nav">';
   html += '<button class="btn ghost" onclick="goTo(\'s-cultural\')">Back</button>';
-  html += '<button class="btn primary" onclick="goTo(\'s-export\')">Review and export</button>';
+  html += '<button class="btn primary" onclick="validateAndGoTo(\'s-export\')">Review and export</button>';
   html += '</div>';
 
   container.innerHTML = html;
@@ -2566,7 +2617,7 @@ function renderRedeployment(container) {
 
   html += '<div class="section-nav">';
   html += '<button class="btn ghost" onclick="goTo(\'s-cultural\')">Back</button>';
-  html += '<button class="btn primary" onclick="goTo(\'s-export\')">Review and export</button>';
+  html += '<button class="btn primary" onclick="validateAndGoTo(\'s-export\')">Review and export</button>';
   html += '</div>';
 
   container.innerHTML = html;
@@ -2727,7 +2778,7 @@ function renderExtension(container) {
 
   html += '<div class="section-nav">';
   html += '<button class="btn ghost" onclick="showHome()">Back to order type</button>';
-  html += '<button class="btn primary" onclick="goTo(\'s-export\')">Review and export</button>';
+  html += '<button class="btn primary" onclick="validateAndGoTo(\'s-export\')">Review and export</button>';
   html += '</div>';
 
   container.innerHTML = html;
@@ -3042,7 +3093,7 @@ function renderTransportPrivate() {
   d.innerHTML =
     '<div class="card"><div class="card-title">Private transport arrangement</div>' +
     '<div class="info-box">Workers are using private transport. Please explain the arrangements below.</div>' +
-    '<div class="fg f"><div class="fld"><label>How will workers travel to and from work?</label>' +
+    '<div class="fg f"><div class="fld"><label>How will workers travel to and from work? <span class="req">*</span></label>' +
     '<textarea id="t_private_work" placeholder="e.g. Workers will use their own vehicles / carpool with other workers / walk (site is 500m from accommodation)..."></textarea></div></div>' +
     '<div class="fg f"><div class="fld"><label>How will workers do grocery shopping and personal errands?</label>' +
     '<textarea id="t_private_grocery" placeholder="e.g. Workers will be driven to town by employer on weekends / public bus available on Saturdays / nearest supermarket is 2km away..."></textarea></div></div>' +
