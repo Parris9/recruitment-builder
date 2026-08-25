@@ -2491,20 +2491,11 @@ function toggleWorkerSource() {
 
   if (newSec) newSec.style.display = (val === 'new' || val === 'mixed') ? 'block' : 'none';
 
-  // Named worker cards (with individual dates, job order/accommodation links) are useful
-  // regardless of source — e.g. referrals or already-identified new workers who arrive
-  // on different dates, not just workers returning from a previous placement.
   if (retSec) {
-    retSec.style.display = val ? 'block' : 'none';
-    if (title) {
-      title.textContent = val === 'new' ? 'Named workers (optional)' : 'Returning worker details';
-    }
-    if (info) {
-      info.textContent = val === 'new'
-        ? 'If you already know specific workers (e.g. referrals), add them here — including their own mobilisation and return dates if these differ from the group.'
-        : 'Add each worker you want to bring back. This helps ALA identify the right candidate in Bullhorn.';
-    }
-    if (val && document.getElementById('returning-wrap') && document.getElementById('returning-wrap').children.length === 0) {
+    retSec.style.display = (val === 'returning' || val === 'mixed') ? 'block' : 'none';
+    if (title) title.textContent = 'Returning worker details';
+    if (info) info.textContent = 'Add each worker you want to bring back. This helps ALA identify the right candidate in Bullhorn.';
+    if ((val === 'returning' || val === 'mixed') && document.getElementById('returning-wrap') && document.getElementById('returning-wrap').children.length === 0) {
       addReturning();
     }
   }
