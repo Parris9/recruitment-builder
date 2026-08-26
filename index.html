@@ -733,6 +733,18 @@
           </div>
         </div>
 
+        <div id="submit-warning" style="display:none;margin-bottom:16px">
+          <div class="card" style="border:2px solid #F59E0B;background:#FFFBEB">
+            <div style="display:flex;gap:12px;align-items:flex-start">
+              <div style="font-size:22px">⚠</div>
+              <div>
+                <div style="font-size:15px;font-weight:700;color:#92400E;margin-bottom:6px">We couldn't confirm your order was fully received</div>
+                <div id="submit-warning-detail" style="font-size:13px;color:#78350F;line-height:1.6"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div id="submit-success" style="display:none">
           <div class="card" style="border:2px solid var(--gm);text-align:center;padding:3rem 2rem;background:linear-gradient(135deg,#f0fdf4 0%,#ffffff 100%)">
             <div style="width:64px;height:64px;background:var(--gm);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 20px;font-size:28px;color:#fff">✓</div>
@@ -3288,18 +3300,45 @@ function submitForm() {
     formData.append('Attachment ' + (i + 1), f, f.name);
   });
 
-  fetch('https://formspree.io/f/maqrvypn', {
+  // Track both requests independently so we only show success when both actually went through.
+  var emailOk = false;
+  var docOk = false;
+
+  var emailPromise = fetch('https://formspree.io/f/maqrvypn', {
     method: 'POST',
     body: formData,
     headers: { 'Accept': 'application/json' }
   }).then(function(response) {
-    return response.json();
-  }).catch(function() { return {}; });
+    emailOk = response.ok;
+    return response.json().catch(function(){ return {}; });
+  }).catch(function() {
+    emailOk = false;
+  });
 
   function finishSubmit() {
-    document.getElementById('submit-success').style.display = 'block';
-    document.getElementById('submit-form-area').style.display = 'none';
-    showToast('Order submitted! Google Doc saved to ALA Recruitment Orders.');
+    var successBox = document.getElementById('submit-success');
+    var warningBox = document.getElementById('submit-warning');
+    var formArea = document.getElementById('submit-form-area');
+
+    if (emailOk && docOk) {
+      if (successBox) successBox.style.display = 'block';
+      if (formArea) formArea.style.display = 'none';
+      showToast('Order submitted! Google Doc saved to ALA Recruitment Orders.');
+    } else {
+      // At least one channel failed at the network level — do not claim success.
+      if (warningBox) {
+        warningBox.style.display = 'block';
+        var msg = document.getElementById('submit-warning-detail');
+        if (msg) {
+          var parts = [];
+          if (!emailOk) parts.push('the email notification');
+          if (!docOk) parts.push('the Google Drive save');
+          msg.textContent = 'We could not confirm ' + parts.join(' or ') + '. Please check your internet connection and try Submit again, or use Export Word doc as a backup and send it to Parris directly.';
+        }
+      }
+      if (btn) { btn.disabled = false; btn.textContent = 'Submit to ALA'; }
+      showToast('Submission may not have completed — see the warning above.');
+    }
   }
 
   function sendToAppsScript(fileNames, fileB64List) {
@@ -3311,9 +3350,15 @@ function submitForm() {
       gasData.append('AttachmentFileNames', JSON.stringify(fileNames));
       gasData.append('AttachmentFileData', JSON.stringify(fileB64List));
     }
-    fetch(scriptUrl, { method: 'POST', body: gasData, mode: 'no-cors' })
-      .then(finishSubmit)
-      .catch(finishSubmit);
+    // NOTE: mode 'no-cors' means we cannot read the actual response body/status —
+    // a resolved promise here only confirms the request was sent, not that Apps
+    // Script finished successfully server-side. Server-side failures are now
+    // self-reported inside the generated document instead (see Apps Script).
+    var docPromise = fetch(scriptUrl, { method: 'POST', body: gasData, mode: 'no-cors' })
+      .then(function() { docOk = true; })
+      .catch(function() { docOk = false; });
+
+    Promise.allSettled([emailPromise, docPromise]).then(finishSubmit);
   }
 
   if (allFiles.length === 0) {
