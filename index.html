@@ -1836,7 +1836,7 @@ function exportDoc(){
       ['Pay Type', lookup(PAY_TYPE, data['Pay Type'])], ['Award & Level', data['Award & Level']],
       ['Pay Frequency', data['Pay Frequency']], ['Guaranteed Hours / Week', data['Guaranteed Hours/Week']],
       ['Hourly Rate', data['Pay Rate']], ['Job Description', data['Job Description']],
-      ['Work Conditions', data['Work Conditions']], ['Working Days', data['Working Days']], ['Hours of Work', data['Hours of Work']]
+      ['Work Conditions', data['Work Conditions']], ['Working Days', data['Working Days']], ['Hours of Work', data['Hours of Work']], ['Rest Breaks', data['Rest Breaks']]
     ]));
 
     if (data['Pay Type'] && data['Pay Type'] !== 'Hourly rate only') {
@@ -1870,10 +1870,12 @@ function exportDoc(){
 
     children = children.concat(section('Recruitment Details', [
       ['Sending Country', data['Preferred Country']], ['Candidates to Interview/Shortlist', data['Candidates Needed']],
+      ['Age Range', data['Age Range']], ['Minimum Experience', data['Minimum Experience']],
       ['Preferred Gender', data['Preferred Gender']], ['Weekend Availability Required', data['Weekend Availability Required']],
+      ['English Requirement', data['English Requirement']], ['Other Skills', data['Other Skills']],
       ['Worker Source', lookup(WORKER_SOURCE, data['Worker Source'])],
       ['Interview Format', lookup(INTERVIEW_FORMAT, data['Interview Format'])],
-      ['Employer Involvement', data['Employer Involvement']], ['Returning Workers', data['Returning Workers']],
+      ['Employer Involvement', data['Employer Involvement']], ['Interview Questions', data['Interview Questions']], ['Tests Required', data['Tests Required']], ['Returning Workers', data['Returning Workers']],
       ['Special Requests \u2014 Before Arrival', data['Special Requests (Before)']],
       ['Special Requests \u2014 After Arrival', data['Special Requests (After)']]
     ]));
@@ -3175,6 +3177,7 @@ function collectFormData() {
   data['Work Conditions'] = gv('rp_conditions');
   data['Working Days'] = gv('rp_days');
   data['Hours of Work'] = gv('rp_hours');
+  data['Rest Breaks'] = gv('rp_breaks');
 
   // Work sites
   var sites = [];
@@ -3220,8 +3223,14 @@ function collectFormData() {
   data['Worker Source'] = gv('r_worker_source');
   data['Interview Format'] = gv('i_format');
   data['Employer Involvement'] = gv('i_emp_inv');
+  data['Interview Questions'] = gv('i_qs');
+  data['Tests Required'] = gv('i_tests');
+  data['Age Range'] = gv('wc_age');
+  data['Minimum Experience'] = gv('wc_exp');
   data['Preferred Gender'] = gv('wc_gender');
   data['Weekend Availability Required'] = gv('wc_weekend');
+  data['English Requirement'] = gv('wc_eng');
+  data['Other Skills'] = gv('wc_other');
   data['Special Requests (Before)'] = gv('sr_before');
   data['Special Requests (After)'] = gv('sr_after');
 
