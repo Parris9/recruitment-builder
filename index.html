@@ -3277,115 +3277,153 @@ function submitForm() {
   var btn = document.getElementById('btn-submit-form');
   if (btn) { btn.disabled = true; btn.textContent = 'Submitting...'; }
 
-  var data = collectFormData();
-  var body = buildEmailBody(data);
-
-  if (!data['Employer Name'] || !data['Account Manager']) {
-    showToast('Please fill in at least the employer name and AM name before submitting.');
-    if (btn) { btn.disabled = false; btn.textContent = 'Submit to ALA'; }
-    return;
-  }
-
-  var allFiles = [];
-  if (_uploadedReturningFile) allFiles.push(_uploadedReturningFile);
-  var supportingInput = document.getElementById('supporting-files-input');
-  if (supportingInput && supportingInput.files) {
-    Array.from(supportingInput.files).forEach(function(f){ allFiles.push(f); });
-  }
-
-  var formData = new FormData();
-  formData.append('_subject', 'New Recruitment Plan Order — ' + data['Employer Name'] + ' (' + data['Job Orders'] + ')');
-  formData.append('_replyto', data['Email'] || '');
-  formData.append('Employer', data['Employer Name']);
-  formData.append('AM', data['Account Manager']);
-  formData.append('Entity', data['Entity']);
-  formData.append('Job Orders', data['Job Orders']);
-  formData.append('Country', data['Sending Country']);
-  formData.append('Programme', data['Programme']);
-  formData.append('Mob Date', data['Mobilisation Date']);
-  formData.append('Full Details', body);
-
-  allFiles.forEach(function(f, i) {
-    formData.append('Attachment ' + (i + 1), f, f.name);
-  });
-
-  // Track both requests independently so we only show success when both actually went through.
-  var emailOk = false;
-  var docOk = false;
-
-  var emailPromise = fetch('https://formspree.io/f/maqrvypn', {
-    method: 'POST',
-    body: formData,
-    headers: { 'Accept': 'application/json' }
-  }).then(function(response) {
-    emailOk = response.ok;
-    return response.json().catch(function(){ return {}; });
-  }).catch(function() {
-    emailOk = false;
-  });
-
-  function finishSubmit() {
-    var successBox = document.getElementById('submit-success');
+  // Safety net: if nothing has resolved within 20 seconds, surface a clear
+  // error instead of leaving the button stuck on "Submitting..." forever.
+  var settled = false;
+  var timeoutId = setTimeout(function() {
+    if (settled) return;
+    settled = true;
     var warningBox = document.getElementById('submit-warning');
-    var formArea = document.getElementById('submit-form-area');
+    if (warningBox) {
+      warningBox.style.display = 'block';
+      var msg = document.getElementById('submit-warning-detail');
+      if (msg) msg.textContent = 'The submission timed out after 20 seconds. This can happen with a slow connection or a large attachment. Please check your internet connection and try Submit again, or use Export Word doc as a backup and send it to Parris directly.';
+    }
+    if (btn) { btn.disabled = false; btn.textContent = 'Submit to ALA'; }
+    showToast('Submission timed out — see the warning above.');
+  }, 20000);
 
-    if (emailOk && docOk) {
-      if (successBox) successBox.style.display = 'block';
-      if (formArea) formArea.style.display = 'none';
-      showToast('Order submitted! Google Doc saved to ALA Recruitment Orders.');
+  function markSettled() {
+    if (settled) return false;
+    settled = true;
+    clearTimeout(timeoutId);
+    return true;
+  }
+
+  try {
+    var data = collectFormData();
+    var body = buildEmailBody(data);
+
+    if (!data['Employer Name'] || !data['Account Manager']) {
+      if (markSettled()) {
+        showToast('Please fill in at least the employer name and AM name before submitting.');
+        if (btn) { btn.disabled = false; btn.textContent = 'Submit to ALA'; }
+      }
+      return;
+    }
+
+    var allFiles = [];
+    if (_uploadedReturningFile) allFiles.push(_uploadedReturningFile);
+    var supportingInput = document.getElementById('supporting-files-input');
+    if (supportingInput && supportingInput.files) {
+      Array.from(supportingInput.files).forEach(function(f){ allFiles.push(f); });
+    }
+
+    var formData = new FormData();
+    formData.append('_subject', 'New Recruitment Plan Order — ' + data['Employer Name'] + ' (' + data['Job Orders'] + ')');
+    formData.append('_replyto', data['Email'] || '');
+    formData.append('Employer', data['Employer Name']);
+    formData.append('AM', data['Account Manager']);
+    formData.append('Entity', data['Entity']);
+    formData.append('Job Orders', data['Job Orders']);
+    formData.append('Country', data['Sending Country']);
+    formData.append('Programme', data['Programme']);
+    formData.append('Mob Date', data['Mobilisation Date']);
+    formData.append('Full Details', body);
+
+    allFiles.forEach(function(f, i) {
+      formData.append('Attachment ' + (i + 1), f, f.name);
+    });
+
+    var emailOk = false;
+    var docOk = false;
+
+    var emailPromise = fetch('https://formspree.io/f/maqrvypn', {
+      method: 'POST',
+      body: formData,
+      headers: { 'Accept': 'application/json' }
+    }).then(function(response) {
+      emailOk = response.ok;
+      return response.json().catch(function(){ return {}; });
+    }).catch(function() {
+      emailOk = false;
+    });
+
+    function finishSubmit() {
+      if (!markSettled()) return;
+      var successBox = document.getElementById('submit-success');
+      var warningBox = document.getElementById('submit-warning');
+      var formArea = document.getElementById('submit-form-area');
+
+      if (emailOk && docOk) {
+        if (successBox) successBox.style.display = 'block';
+        if (formArea) formArea.style.display = 'none';
+        showToast('Order submitted! Google Doc saved to ALA Recruitment Orders.');
+      } else {
+        if (warningBox) {
+          warningBox.style.display = 'block';
+          var msg = document.getElementById('submit-warning-detail');
+          if (msg) {
+            var parts = [];
+            if (!emailOk) parts.push('the email notification');
+            if (!docOk) parts.push('the Google Drive save');
+            msg.textContent = 'We could not confirm ' + parts.join(' or ') + '. Please check your internet connection and try Submit again, or use Export Word doc as a backup and send it to Parris directly.';
+          }
+        }
+        if (btn) { btn.disabled = false; btn.textContent = 'Submit to ALA'; }
+        showToast('Submission may not have completed — see the warning above.');
+      }
+    }
+
+    function sendToAppsScript(fileNames, fileB64List) {
+      try {
+        var scriptUrl = 'https://script.google.com/macros/s/AKfycbwPCPyrFfHymDk5JTYv9QhRCJfQxuWYIoJo9vYjL1t0oqF7-4jp8ULAbAFQePWs7QOn/exec';
+        var gasData = new FormData();
+        var formObj = collectFormData();
+        Object.keys(formObj).forEach(function(k){ gasData.append(k, formObj[k] || ''); });
+        if (fileNames && fileNames.length) {
+          gasData.append('AttachmentFileNames', JSON.stringify(fileNames));
+          gasData.append('AttachmentFileData', JSON.stringify(fileB64List));
+        }
+        var docPromise = fetch(scriptUrl, { method: 'POST', body: gasData, mode: 'no-cors' })
+          .then(function() { docOk = true; })
+          .catch(function() { docOk = false; });
+
+        Promise.allSettled([emailPromise, docPromise]).then(finishSubmit).catch(finishSubmit);
+      } catch (err) {
+        docOk = false;
+        finishSubmit();
+      }
+    }
+
+    if (allFiles.length === 0) {
+      sendToAppsScript([], []);
     } else {
-      // At least one channel failed at the network level — do not claim success.
+      var readers = allFiles.map(function(f) {
+        return new Promise(function(resolve) {
+          var reader = new FileReader();
+          reader.onload = function(e) { resolve(e.target.result.split(',')[1]); };
+          reader.onerror = function() { resolve(''); };
+          reader.readAsDataURL(f);
+        });
+      });
+      Promise.all(readers).then(function(base64List) {
+        sendToAppsScript(allFiles.map(function(f){ return f.name; }), base64List);
+      }).catch(function() {
+        sendToAppsScript([], []);
+      });
+    }
+  } catch (err) {
+    if (markSettled()) {
+      var warningBox = document.getElementById('submit-warning');
       if (warningBox) {
         warningBox.style.display = 'block';
         var msg = document.getElementById('submit-warning-detail');
-        if (msg) {
-          var parts = [];
-          if (!emailOk) parts.push('the email notification');
-          if (!docOk) parts.push('the Google Drive save');
-          msg.textContent = 'We could not confirm ' + parts.join(' or ') + '. Please check your internet connection and try Submit again, or use Export Word doc as a backup and send it to Parris directly.';
-        }
+        if (msg) msg.textContent = 'Something went wrong while preparing your submission (' + err.message + '). Please try again, or use Export Word doc as a backup and send it to Parris directly.';
       }
       if (btn) { btn.disabled = false; btn.textContent = 'Submit to ALA'; }
-      showToast('Submission may not have completed — see the warning above.');
+      showToast('Submission failed — see the warning above.');
     }
-  }
-
-  function sendToAppsScript(fileNames, fileB64List) {
-    var scriptUrl = 'https://script.google.com/macros/s/AKfycbwPCPyrFfHymDk5JTYv9QhRCJfQxuWYIoJo9vYjL1t0oqF7-4jp8ULAbAFQePWs7QOn/exec';
-    var gasData = new FormData();
-    var formObj = collectFormData();
-    Object.keys(formObj).forEach(function(k){ gasData.append(k, formObj[k] || ''); });
-    if (fileNames && fileNames.length) {
-      gasData.append('AttachmentFileNames', JSON.stringify(fileNames));
-      gasData.append('AttachmentFileData', JSON.stringify(fileB64List));
-    }
-    // NOTE: mode 'no-cors' means we cannot read the actual response body/status —
-    // a resolved promise here only confirms the request was sent, not that Apps
-    // Script finished successfully server-side. Server-side failures are now
-    // self-reported inside the generated document instead (see Apps Script).
-    var docPromise = fetch(scriptUrl, { method: 'POST', body: gasData, mode: 'no-cors' })
-      .then(function() { docOk = true; })
-      .catch(function() { docOk = false; });
-
-    Promise.allSettled([emailPromise, docPromise]).then(finishSubmit);
-  }
-
-  if (allFiles.length === 0) {
-    sendToAppsScript([], []);
-  } else {
-    var readers = allFiles.map(function(f) {
-      return new Promise(function(resolve) {
-        var reader = new FileReader();
-        reader.onload = function(e) { resolve(e.target.result.split(',')[1]); };
-        reader.onerror = function() { resolve(''); };
-        reader.readAsDataURL(f);
-      });
-    });
-    Promise.all(readers).then(function(base64List) {
-      sendToAppsScript(allFiles.map(function(f){ return f.name; }), base64List);
-    }).catch(function() {
-      sendToAppsScript([], []);
-    });
   }
 }
 
