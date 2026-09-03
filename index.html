@@ -3319,32 +3319,59 @@ function submitForm() {
       Array.from(supportingInput.files).forEach(function(f){ allFiles.push(f); });
     }
 
-    var formData = new FormData();
-    formData.append('_subject', 'New Recruitment Plan Order — ' + data['Employer Name'] + ' (' + data['Job Orders'] + ')');
-    formData.append('_replyto', data['Email'] || '');
-    formData.append('Employer', data['Employer Name']);
-    formData.append('AM', data['Account Manager']);
-    formData.append('Entity', data['Entity']);
-    formData.append('Job Orders', data['Job Orders']);
-    formData.append('Country', data['Sending Country']);
-    formData.append('Programme', data['Programme']);
-    formData.append('Mob Date', data['Mobilisation Date']);
-    formData.append('Full Details', body);
-
-    allFiles.forEach(function(f, i) {
-      formData.append('Attachment ' + (i + 1), f, f.name);
-    });
+    function buildFormData(includeFiles) {
+      var fd = new FormData();
+      fd.append('_subject', 'New Recruitment Plan Order — ' + data['Employer Name'] + ' (' + data['Job Orders'] + ')');
+      fd.append('_replyto', data['Email'] || '');
+      fd.append('Employer', data['Employer Name']);
+      fd.append('AM', data['Account Manager']);
+      fd.append('Entity', data['Entity']);
+      fd.append('Job Orders', data['Job Orders']);
+      fd.append('Country', data['Sending Country']);
+      fd.append('Programme', data['Programme']);
+      fd.append('Mob Date', data['Mobilisation Date']);
+      fd.append('Full Details', body);
+      if (includeFiles) {
+        allFiles.forEach(function(f, i) {
+          fd.append('Attachment ' + (i + 1), f, f.name);
+        });
+        if (allFiles.length > 0) {
+          fd.append('Note', 'This order had ' + allFiles.length + ' file(s) attached — see the Google Doc / Drive folder for them.');
+        }
+      } else if (allFiles.length > 0) {
+        fd.append('Note', 'This order had ' + allFiles.length + ' file(s) attached, but they could not be emailed (plan limit) — see the Google Doc / Drive folder for them: ' + allFiles.map(function(f){ return f.name; }).join(', '));
+      }
+      return fd;
+    }
 
     var emailOk = false;
     var docOk = false;
 
+    // If attaching files isn't supported on the current Formspree plan, it responds
+    // with a 400 — in that case, automatically retry without attachments so the
+    // notification still goes out (the files themselves are always safe in Drive).
     var emailPromise = fetch('https://formspree.io/f/maqrvypn', {
       method: 'POST',
-      body: formData,
+      body: buildFormData(true),
       headers: { 'Accept': 'application/json' }
     }).then(function(response) {
-      emailOk = response.ok;
-      return response.json().catch(function(){ return {}; });
+      if (response.ok) {
+        emailOk = true;
+        return response.json().catch(function(){ return {}; });
+      }
+      if (allFiles.length > 0) {
+        // Retry once, without attachments
+        return fetch('https://formspree.io/f/maqrvypn', {
+          method: 'POST',
+          body: buildFormData(false),
+          headers: { 'Accept': 'application/json' }
+        }).then(function(retryResponse) {
+          emailOk = retryResponse.ok;
+          return retryResponse.json().catch(function(){ return {}; });
+        });
+      }
+      emailOk = false;
+      return {};
     }).catch(function() {
       emailOk = false;
     });
