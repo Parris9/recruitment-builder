@@ -751,7 +751,8 @@
             <div style="font-size:22px;font-weight:800;color:var(--gd);margin-bottom:10px;letter-spacing:-.01em">Order submitted!</div>
             <div style="font-size:14px;color:#374151;line-height:1.7;max-width:420px;margin:0 auto 24px">
               Your recruitment order has been sent to the <strong>ALA PALM Compliance team</strong>.<br>
-              The team will review the details and be in touch with you within <strong>2 business days</strong>.
+              The team will review the details and be in touch with you within <strong>2 business days</strong>.<br>
+              A Word copy has also started downloading for your own records.
             </div>
             <div id="doc-link-wrap" style="display:none;margin-bottom:20px">
               <a id="doc-link" href="#" target="_blank" class="btn primary" style="display:inline-block;text-decoration:none;padding:10px 22px">
@@ -3386,6 +3387,8 @@ function submitForm() {
         if (successBox) successBox.style.display = 'block';
         if (formArea) formArea.style.display = 'none';
         showToast('Order submitted! Google Doc saved to ALA Recruitment Orders.');
+        // Also give the AM an instant local Word copy for their own records.
+        try { exportDoc(); } catch (exportErr) { /* never let this block the success screen */ }
       } else {
         if (warningBox) {
           warningBox.style.display = 'block';
