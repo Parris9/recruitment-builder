@@ -1743,9 +1743,9 @@ function buildExportSummary(){
 
   var payDisplay = '-';
   if (data['Pay Type']) {
-    if (data['Pay Type'] === 'piecerate') payDisplay = 'Piece rate only' + (data['Piece Rate Tasks'] ? ' — ' + data['Piece Rate Tasks'].split(' | ').length + ' task(s)' : '');
-    else if (data['Pay Type'] === 'mixed') payDisplay = 'Hourly + piece rate (mixed) — ' + (data['Pay Rate'] || '-');
-    else payDisplay = 'Hourly rate only — ' + (data['Pay Rate'] || '-');
+    if (data['Pay Type'] === 'Piece rate only') payDisplay = data['Pay Type'] + (data['Piece Rate Tasks'] ? ' — ' + data['Piece Rate Tasks'].split(' | ').length + ' task(s)' : '');
+    else if (data['Pay Type'] === 'Hourly + piece rate (mixed)') payDisplay = data['Pay Type'] + ' — ' + (data['Pay Rate'] || '-');
+    else payDisplay = data['Pay Type'] + ' — ' + (data['Pay Rate'] || '-');
   }
 
   var workerSourceMap = { 'new': 'New workers only', 'returning': 'Returning workers only', 'mixed': 'Mix of new and returning' };
