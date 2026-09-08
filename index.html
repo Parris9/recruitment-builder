@@ -1891,7 +1891,14 @@ function exportDoc(){
 
     children = children.concat(section('Accommodation', [
       ['Provider', data['Accommodation Provider']], ['Address', data['Accommodation Address']],
-      ['Status', lookup(ACCOM_STATUS, data['Accommodation Status'])]
+      ['Status', lookup(ACCOM_STATUS, data['Accommodation Status'])],
+      ['Property Provider', data['Accommodation Property Provider']],
+      ['Agent/Business Name', data['Accommodation Agent/Business Name']],
+      ['Agent Contact', data['Accommodation Agent Contact']],
+      ['Agent Phone', data['Accommodation Agent Phone']],
+      ['Agent Email', data['Accommodation Agent Email']],
+      ['Agent ABN', data['Accommodation Agent ABN']],
+      ['Weekly Cost Breakdown', data['Accommodation Weekly Cost Breakdown']]
     ]));
 
     children = children.concat(section('Transport', [
@@ -1915,7 +1922,7 @@ function exportDoc(){
       ['Preferred Gender', data['Preferred Gender']], ['Weekend Availability Required', data['Weekend Availability Required']],
       ['English Requirement', data['English Requirement']], ['Other Skills', data['Other Skills']],
       ['Worker Source', lookup(WORKER_SOURCE, data['Worker Source'])],
-      ['Interview Format', lookup(INTERVIEW_FORMAT, data['Interview Format'])],
+      ['Interview Format', lookup(INTERVIEW_FORMAT, data['Interview Format'])], ['Interview Travel Date', fmtDate(data['Interview Travel Date'])],
       ['Employer Involvement', data['Employer Involvement']], ['Interview Questions', data['Interview Questions']], ['Tests Required', data['Tests Required']], ['Returning Workers', data['Returning Workers']],
       ['Special Requests \u2014 Before Arrival', data['Special Requests (Before)']],
       ['Special Requests \u2014 After Arrival', data['Special Requests (After)']]
@@ -3233,6 +3240,23 @@ function collectFormData() {
   data['Accommodation Provider'] = gv('accom_provider');
   data['Accommodation Address'] = gv('accom_address') || gv('accom_private_addr');
   data['Accommodation Status'] = gv('accom_status');
+  data['Accommodation Property Provider'] = gv('ac0_prov');
+  data['Accommodation Agent/Business Name'] = gv('ac0_re_name');
+  data['Accommodation Agent Contact'] = gv('ac0_re_contact');
+  data['Accommodation Agent Phone'] = gv('ac0_re_phone');
+  data['Accommodation Agent Email'] = gv('ac0_re_email');
+  data['Accommodation Agent ABN'] = gv('ac0_re_abn');
+  (function() {
+    var costs = [];
+    if (gv('ac0_rent')) costs.push('Rent: $' + gv('ac0_rent') + '/wk');
+    if (gv('ac0_wifi')) costs.push('WiFi: $' + gv('ac0_wifi') + '/wk');
+    if (gv('ac0_elec')) costs.push('Electricity: $' + gv('ac0_elec') + '/wk');
+    if (gv('ac0_furn')) costs.push('Furniture: $' + gv('ac0_furn') + '/wk');
+    if (gv('ac0_water')) costs.push('Water: $' + gv('ac0_water') + '/wk');
+    if (gv('ac0_gas')) costs.push('Gas: $' + gv('ac0_gas') + '/wk');
+    if (gv('ac0_other')) costs.push('Other: ' + gv('ac0_other'));
+    data['Accommodation Weekly Cost Breakdown'] = costs.join(' | ');
+  })();
 
   // Transport
   data['Transport Provider'] = gv('transport_provider');
@@ -3263,6 +3287,7 @@ function collectFormData() {
   data['Candidates Needed'] = gv('r_candidates');
   data['Worker Source'] = gv('r_worker_source');
   data['Interview Format'] = gv('i_format');
+  data['Interview Travel Date'] = gv('i_travel_date');
   data['Employer Involvement'] = gv('i_emp_inv');
   data['Interview Questions'] = gv('i_qs');
   data['Tests Required'] = gv('i_tests');
