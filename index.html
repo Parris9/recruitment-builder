@@ -146,7 +146,7 @@
       <div class="sidebar-item" data-sec="s-sites"><span class="si-dot" id="dot-sites"></span>Work sites</div>
       <div class="sidebar-item" data-sec="s-accom"><span class="si-dot" id="dot-accom"></span>Accommodation</div>
       <div class="sidebar-item" data-sec="s-transport"><span class="si-dot" id="dot-transport"></span>Transport</div>
-      <div class="sidebar-item" data-sec="s-contingency"><span class="si-dot" id="dot-contingency"></span>Contingency plan</div>
+      <div class="sidebar-item" id="nav-contingency" data-sec="s-contingency"><span class="si-dot" id="dot-contingency"></span>Contingency plan</div>
       <div class="sidebar-item" data-sec="s-cultural"><span class="si-dot" id="dot-cultural"></span>Cultural competency</div>
       <div class="sidebar-group-label" style="margin-top:.5rem">Part 2 — Recruitment</div>
       <div id="p2-sidebar-items">
@@ -227,7 +227,6 @@
                 <input type="text" id="h_addr" placeholder="Street, Suburb, State, Postcode">
               </div>
             </div>
-          </div>
           <div class="fg t">
             <div class="fld"><label>Industry <span class="req">*</span></label>
               <select id="h_industry" onchange="updateIndustryGroup()">
@@ -272,6 +271,7 @@
             <div class="fld"><label>Industry division</label>
               <input type="text" id="h_ind_div" readonly placeholder="Auto-filled">
             </div>
+          </div>
           </div>
         <div class="section-nav">
           <button class="btn ghost" onclick="goTo('s-general')">← Back</button>
@@ -627,7 +627,7 @@
 
         <div class="section-nav">
           <button class="btn ghost" onclick="goTo('s-accom')">← Back</button>
-          <button class="btn primary" onclick="validateAndGoTo('s-contingency')">Next: Contingency plan →</button>
+          <button class="btn primary" onclick="goToAfterTransport()">Next →</button>
         </div>
 
       </div>
@@ -690,7 +690,7 @@
           </div>
         </div>
         <div class="section-nav">
-          <button class="btn ghost" onclick="goTo('s-contingency')">← Back</button>
+          <button class="btn ghost" onclick="goToBeforeCultural()">← Back</button>
           <button class="btn primary" onclick="validateAndGoTo('s-p2-main')">Next: Recruitment details →</button>
         </div>
       </div>
@@ -712,7 +712,7 @@
           <div class="card">
             <div class="card-title">Attach supporting documents (optional)</div>
             <div class="info-box">Attach any supporting files — spreadsheets, arrival lists, referral details, PDFs, screenshots — any format. These will be sent with your order and saved to the ALA Recruitment Orders folder alongside your submission.</div>
-            <input type="file" id="supporting-files-input" multiple style="font-size:13px;margin-bottom:8px">
+            <input type="file" id="supporting-files-input" multiple style="font-size:13px;margin-bottom:8px" onchange="checkSupportingFilesSize(); if(typeof buildExportSummary==='function') buildExportSummary();">
             <div id="supporting-files-list" style="font-size:12px;color:var(--mu);margin-top:6px"></div>
           </div>
 
@@ -1316,9 +1316,26 @@ function makeRow(cols) {
   return row;
 }
 
+function goToAfterTransport() {
+  if (gv('h_ctype') === 'existing') { goTo('s-cultural'); }
+  else { validateAndGoTo('s-contingency'); }
+}
+
+function goToBeforeCultural() {
+  if (gv('h_ctype') === 'existing') { goTo('s-transport'); }
+  else { goTo('s-contingency'); }
+}
+
+function updateContingencyVisibility() {
+  var val = gv('h_ctype');
+  var navItem = document.getElementById('nav-contingency');
+  if (navItem) navItem.style.display = (val === 'existing') ? 'none' : '';
+}
+
 function toggleClientType() {
   var val = gv('h_ctype');
   var newFields = document.getElementById('h_new_client_fields');
+  updateContingencyVisibility();
   if (!newFields) return;
   if (val === 'existing') {
     newFields.style.display = 'none';
@@ -1425,11 +1442,11 @@ function addRole(){
   row1.innerHTML =
     '<div class="fld"><label>Job order number <span class="req">*</span></label><input type="text" id="rl'+idx+'_jo" placeholder="e.g. JO-2024-0055"></div>' +
     '<div class="fld"><label>Job title <span class="req">*</span></label><input type="text" id="rl'+idx+'_title" placeholder="e.g. Plant Operator, Fruit Picker"></div>' +
-    '<div class="fld"><label>Number of workers</label><input type="number" id="rl'+idx+'_count" placeholder="e.g. 5" min="1" oninput="updateTotalWorkers()"></div>';
+    '<div class="fld"><label>Number of workers <span class="req">*</span></label><input type="number" id="rl'+idx+'_count" placeholder="e.g. 5" min="1" oninput="updateTotalWorkers()"></div>';
   d.appendChild(row1);
 
   var row2 = document.createElement('div'); row2.className = 'fg tw';
-  row2.innerHTML = '<div class="fld"><label>Gender preference</label><select id="rl'+idx+'_gender"><option value="">No preference</option><option>Male preferred</option><option>Female preferred</option></select></div>';
+  row2.innerHTML = '<div class="fld"><label>Gender preference <span class="req">*</span></label><select id="rl'+idx+'_gender"><option value="No preference">No preference</option><option>Male preferred</option><option>Female preferred</option></select></div>';
   d.appendChild(row2);
 
 
@@ -1635,7 +1652,7 @@ function addVehicle(){
     '<div class="fg t">'+
       '<div class="fld"><label>Make and model</label><input type="text" id="vh'+idx+'_make" placeholder="e.g. Toyota HiAce"></div>'+
       '<div class="fld"><label>Number of seats (excl. driver)</label><input type="number" id="vh'+idx+'_seats" placeholder="e.g. 8"></div>'+
-      '<div class="fld"><label>Registration number</label><input type="text" id="vh'+idx+'_rego" placeholder="e.g. ABC123"></div>'+
+      '<div class="fld"><label>Registration number <span class="req">*</span></label><input type="text" id="vh'+idx+'_rego" placeholder="e.g. ABC123"></div>'+
     '</div>';
   wrap.appendChild(d);
   var rmBtn=d.querySelector('.rm-btn');
@@ -1723,6 +1740,23 @@ function buildExportSummary(){
   updateCP();
   var data = collectFormData();
   function fdd(v){ return v ? fd(v) : '-'; }
+
+  var payDisplay = '-';
+  if (data['Pay Type']) {
+    if (data['Pay Type'] === 'piecerate') payDisplay = 'Piece rate only' + (data['Piece Rate Tasks'] ? ' — ' + data['Piece Rate Tasks'].split(' | ').length + ' task(s)' : '');
+    else if (data['Pay Type'] === 'mixed') payDisplay = 'Hourly + piece rate (mixed) — ' + (data['Pay Rate'] || '-');
+    else payDisplay = 'Hourly rate only — ' + (data['Pay Rate'] || '-');
+  }
+
+  var workerSourceMap = { 'new': 'New workers only', 'returning': 'Returning workers only', 'mixed': 'Mix of new and returning' };
+  var workerSourceDisplay = workerSourceMap[data['Worker Source']] || '-';
+
+  var namedWorkersCount = data['Returning Workers'] ? data['Returning Workers'].split(' | ').length : 0;
+
+  var supportingInput = document.getElementById('supporting-files-input');
+  var attachedCount = supportingInput && supportingInput.files ? supportingInput.files.length : 0;
+  var attachedDisplay = attachedCount > 0 ? attachedCount + ' file(s) attached' : 'None';
+
   document.getElementById('export-summary').innerHTML=
     '<div class="fg tw"><div class="fld"><label>Entity</label><div style="font-size:14px;font-weight:500">'+(data['Entity']||'-')+'</div></div>'+
     '<div class="fld"><label>Account Manager</label><div style="font-size:14px;font-weight:500">'+(data['Account Manager']||'-')+'</div></div></div>'+
@@ -1732,11 +1766,17 @@ function buildExportSummary(){
     '<div class="fld"><label>Country / Visa</label><div style="font-size:14px;font-weight:500">'+(data['Sending Country']||'-')+' / '+(data['Visa Length']||'-')+'</div></div></div>'+
     '<div class="fg tw"><div class="fld"><label>Mobilisation date</label><div style="font-size:14px;font-weight:500">'+fdd(data['Mobilisation Date'])+'</div></div>'+
     '<div class="fld"><label>Contract end date</label><div style="font-size:14px;font-weight:500">'+fdd(data['Contract End Date'])+'</div></div></div>'+
-    '<div class="fg tw"><div class="fld"><label>Work sites</label><div style="font-size:14px;font-weight:500">'+(data['Work Sites']||'-')+'</div></div>'+
-    '<div class="fld"><label>Accommodation</label><div style="font-size:14px;font-weight:500">'+(data['Accommodation Provider']?data['Accommodation Provider']+' — '+(data['Accommodation Address']||''):'-')+'</div></div></div>'+
-    '<div class="fg tw"><div class="fld"><label>Transport</label><div style="font-size:14px;font-weight:500">'+(data['Transport Provider']||'-')+'</div></div>'+
-    '<div class="fld"><label>Cultural competency</label><div style="font-size:14px;font-weight:500">'+(data['Cultural Competency Contact']||'-')+'</div></div></div>';
+    '<div class="fg tw"><div class="fld"><label>Pay</label><div style="font-size:14px;font-weight:500">'+payDisplay+'</div></div>'+
+    '<div class="fld"><label>Work sites</label><div style="font-size:14px;font-weight:500">'+(data['Work Sites']||'-')+'</div></div></div>'+
+    '<div class="fg tw"><div class="fld"><label>Accommodation</label><div style="font-size:14px;font-weight:500">'+(data['Accommodation Provider']?data['Accommodation Provider']+' — '+(data['Accommodation Address']||''):'-')+'</div></div>'+
+    '<div class="fld"><label>Transport</label><div style="font-size:14px;font-weight:500">'+(data['Transport Provider']||'-')+'</div></div></div>'+
+    '<div class="fg tw"><div class="fld"><label>Cultural competency</label><div style="font-size:14px;font-weight:500">'+(data['Cultural Competency Contact']||'-')+'</div></div>'+
+    '<div class="fld"><label>Worker source</label><div style="font-size:14px;font-weight:500">'+workerSourceDisplay+(data['Candidates Needed']?' — '+data['Candidates Needed']+' candidates':'')+'</div></div></div>'+
+    (namedWorkersCount > 0 ? '<div class="fg tw"><div class="fld"><label>Named workers</label><div style="font-size:14px;font-weight:500">'+namedWorkersCount+' worker(s) — see Recruitment details to review</div></div>'+
+    '<div class="fld"><label>Attached documents</label><div style="font-size:14px;font-weight:500">'+attachedDisplay+'</div></div></div>' :
+    '<div class="fg tw"><div class="fld"><label>Attached documents</label><div style="font-size:14px;font-weight:500">'+attachedDisplay+'</div></div><div class="fld"></div></div>');
 }
+
 
 /* -- EXPORT DOC -- */
 function exportDoc(){
@@ -3614,6 +3654,29 @@ var roleCount = 0, siteCount = 0, accomCount = 0, vehicleCount = 0;
 /* -- UTILS -- */
 function gv(id){var e=document.getElementById(id);return e?e.value.trim():'';}
 function fd(v){if(!v)return'-';var d=new Date(v+'T00:00:00');return d.toLocaleDateString('en-AU',{day:'2-digit',month:'short',year:'numeric'});}
+function checkSupportingFilesSize() {
+  var input = document.getElementById('supporting-files-input');
+  var listEl = document.getElementById('supporting-files-list');
+  if (!input || !listEl) return;
+  var files = Array.from(input.files || []);
+  if (files.length === 0) { listEl.innerHTML = ''; return; }
+
+  var totalBytes = files.reduce(function(sum, f) { return sum + f.size; }, 0);
+  var totalMB = (totalBytes / (1024 * 1024)).toFixed(1);
+  var SAFE_LIMIT_MB = 10; // conservative margin under Google Apps Script's ~50MB request limit
+
+  var namesHtml = files.map(function(f) {
+    var sizeMB = (f.size / (1024 * 1024)).toFixed(2);
+    return f.name + ' (' + sizeMB + ' MB)';
+  }).join(', ');
+
+  if (totalBytes > SAFE_LIMIT_MB * 1024 * 1024) {
+    listEl.innerHTML = '<span style="color:#DC2626;font-weight:600">⚠ ' + files.length + ' file(s), ' + totalMB + ' MB total — this is quite large and may fail to submit. Please keep attachments under ' + SAFE_LIMIT_MB + ' MB combined if possible.</span><br>' + namesHtml;
+  } else {
+    listEl.innerHTML = files.length + ' file(s) selected, ' + totalMB + ' MB total: ' + namesHtml;
+  }
+}
+
 function showToast(msg){var t=document.getElementById('toast');t.textContent=msg;t.classList.add('on');setTimeout(function(){t.classList.remove('on');},3000);}
 function getChecked(name){return Array.from(document.querySelectorAll('input[name="'+name+'"]:checked')).map(function(c){return c.value;}).join(', ');}
 
