@@ -1317,8 +1317,8 @@ function makeRow(cols) {
 }
 
 function goToAfterTransport() {
-  if (gv('h_ctype') === 'existing') { goTo('s-cultural'); }
-  else { validateAndGoTo('s-contingency'); }
+  var destination = (gv('h_ctype') === 'existing') ? 's-cultural' : 's-contingency';
+  validateAndGoTo(destination);
 }
 
 function goToBeforeCultural() {
