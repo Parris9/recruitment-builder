@@ -3095,7 +3095,7 @@ function addExistingVehicle() {
   if (idx > 0) { var rm = document.createElement('button'); rm.className = 'rm-btn'; rm.textContent = 'Remove'; rm.addEventListener('click', function(){ blk.remove(); }); hdr.appendChild(rm); }
   blk.appendChild(hdr);
   var row = document.createElement('div'); row.className = 'fg tw';
-  row.innerHTML = '<div class="fld"><label>Registration number</label><input type="text" id="exveh'+idx+'_rego" placeholder="e.g. ABC123"></div>' +
+  row.innerHTML = '<div class="fld"><label>Registration number <span class="req">*</span></label><input type="text" id="exveh'+idx+'_rego" placeholder="e.g. ABC123"></div>' +
     '<div class="fld"><label>Seats (excl. driver)</label><input type="number" id="exveh'+idx+'_seats" placeholder="e.g. 8"></div>';
   blk.appendChild(row);
   wrap.appendChild(blk);
